@@ -1,7 +1,8 @@
 # ホノルルマラソンを走る会WEBサイト開発用環境
 
 ## はじめに
-webサイトの開発には、WEBサーバーが必要になりますが、実際に借りるのはお金がかかるので、仮想的に手元のパソコンにWEBサーバーと同様の環境（ローカル開発環境）を作る必要があります。
+webサイトの開発には、WEBサーバーが必要になりますが、
+実際に借りるのはお金がかかるので、仮想的に手元のパソコンにWEBサーバーと同様の環境（ローカル開発環境）を作る必要があります。
 
 以下の手順を踏めば、簡単にローカル開発環境が作れるはずです。
 
@@ -25,7 +26,8 @@ LinuxやWindowsの場合は、自分で以下公式サイトからインスト�
 ## How to Use(使い方)
 
 ### 1.Clone this repo
-VagrantとVirtualboxをインストールしたら、
+
+VagrantとVirtualboxをインストールしたら、  
 このリポジトリを以下のコマンドでダウンロードしてください。
 
 - ※リポジトリとは、簡単に説明すると、gitが管理するディレクトリ(フォルダ)のことです
@@ -46,7 +48,7 @@ $ cd vagrant
 $ vagrant up
 ~~~
 
-### Connect to the virtual machine
+### 3.Connect to the virtual machine
 
 `vagrant ssh`コマンドを実行してください。
 こうすることで、仮想マシンに接続できます。
@@ -55,16 +57,20 @@ $ vagrant up
 $ vagrant ssh
 ~~~
 
-### Set up the Database
-`vagrant ssh`コマンドを実行すると、vagrantというユーザー名で/home/vagrantディレクトリに入ります。
-その下のhost_dataディレクトリがリポジトリのvagrantディレクトリと同期するよう設定してあります。
+### 4.Set up the Database
+`vagrant ssh`コマンドを実行すると、vagrantというユーザー名で/home/vagrantディレクトリに入ります。  
+その下のhost_dataディレクトリがリポジトリのvagrantディレクトリと同期するよう設定してあります。  
 
-更にそのディレクトリにscriptsディレクトリがあり、その中の`setup_db.sh`を実行すると
-データベース（postgresqlというソフト）がインストールされた後、ホノマラの過去のデータがデータベースにインポートされます。
+更にそのディレクトリにscriptsディレクトリがあり、  その中の`setup_db.sh`というスクリプトがあるので実行してください。
+
+すると、データベース（postgresqlというソフト）がインストールされた後、ホノマラの過去のデータがデータベースにインポートされます。
+
 接続設定は以下のとおりです
+
 - database: honomara
 - user(role): honomara
 - password: honomara
+
 ~~~console
 $ cd host_data
 $ cd scripts
@@ -73,13 +79,13 @@ $ ./setup_db.sh
 
 
 ### Test and try the database
-早速データベースを試してみましょう。
-`psql`というコマンドでデータベースに接続します。
-いろいろなSQLを試して、データを扱う練習をすると良いです。
+早速データベースを試してみましょう。  
+`psql`というコマンドでデータベースに接続します。    
+いろいろなSQLを試して、データを扱う練習をすると良いです。    
+
 ~~~console
 $ psql -U honomara -d honomara
 ここでパスワードを聞かれるので、honomaraと入力する
-
 honomara=> SELECT * FROM person LIMIT 10;
 それっぽいデータが表示される。
 honomara=>\q
@@ -103,8 +109,8 @@ $
 
 
 ### Reset the virtual machine
-vagrant ディレクトリで`vagrant destroy`仮想マシンを破壊できます。
-「データをリセットしたい」、「よくわからなくなった」という場合は
+vagrant ディレクトリで`vagrant destroy`仮想マシンを破壊できます。  
+「データをリセットしたい」、「よくわからなくなった」という場合は  
 このコマンドで仮想マシンを廃棄した後再度上から順に実行しましょう。
 
 ## tips
@@ -117,5 +123,6 @@ setup_db.shファイルを読むと参考になるかもしれません。
 
 
 ## Loadmap
-WEBサーバーや言語ランタイム(PHP,Python,Ruby)等の設定を追加していくつもりです。
-(一応設定スクリプトは書いたのですが、ドキュメントを書くのが疲れたので、今はここまで。気になる人は`vagrant/scripts`ディレクトリを見てみてください。)
+WEBサーバーや言語ランタイム(PHP,Python,Ruby)等の設定を追加していくつもりです。  
+(一応設定スクリプトは書いたのですが、ドキュメントを書くのが疲れたので、今はここまで。  
+気になる人は`vagrant/scripts`ディレクトリを見てみてください。)
