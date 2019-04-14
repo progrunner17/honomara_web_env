@@ -2,8 +2,6 @@
 set -eu
 
 # import data of honomara
-sudo -u postgres psql -c "CREATE ROLE honomara WITH LOGIN PASSWORD 'honomara';"
-sudo -u postgres psql -c "CREATE DATABASE honomara ENCODING=UTF8 OWNER=honomara;"
 SQL_DIR=../sql
 export PGPASSWORD=honomara
 psql -U honomara -d honomara -f ${SQL_DIR}/create.sql

@@ -9,6 +9,9 @@ sudo sed -i 's/^local\s*all\s*all\s*peer/local\tall\tall\tmd5/g'\
   /etc/postgresql/9.5/main/pg_hba.conf
 sudo systemctl restart postgresql
 
+sudo -u postgres psql -c "CREATE ROLE honomara WITH LOGIN PASSWORD 'honomara';"
+sudo -u postgres psql -c "CREATE DATABASE honomara ENCODING=UTF8 OWNER=honomara;"
+
 if ! (type pip3 > /dev/null 2>&1); then
 ./setup_pip3.sh
 fi
