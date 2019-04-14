@@ -12,7 +12,7 @@ sudo systemctl restart postgresql
 # import data of honomara
 sudo -u postgres psql -c "CREATE ROLE honomara WITH LOGIN PASSWORD 'honomara';"
 sudo -u postgres psql -c "CREATE DATABASE honomara ENCODING=UTF8 OWNER=honomara;"
-SQL_DIR=/home/vagrant/host_data/sql
+SQL_DIR=/vagrant/sql
 export PGPASSWORD=honomara
 psql -U honomara -d honomara -f ${SQL_DIR}/create.sql
 psql -U honomara -d honomara -f ${SQL_DIR}/person_data.sql

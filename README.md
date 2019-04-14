@@ -59,9 +59,9 @@ $ vagrant ssh
 
 ### 4.Set up the Database
 `vagrant ssh`コマンドを実行すると、vagrantというユーザー名で/home/vagrantディレクトリに入ります。  
-その下のhost_dataディレクトリがリポジトリのvagrantディレクトリと同期するよう設定してあります。  
 
-更にそのディレクトリにscriptsディレクトリがあり、  その中の`setup_db.sh`というスクリプトがあるので実行してください。
+このリポジトリ（のルートディレクトリ）は起動した仮想マシン内の/vagrantディレクトリと同期するようになっています。
+scriptsディレクトリ中に`setup_db.sh`というスクリプトがあるので実行してください。
 
 すると、データベース（postgresqlというソフト）がインストールされた後、ホノマラの過去のデータがデータベースにインポートされます。
 
@@ -72,8 +72,7 @@ $ vagrant ssh
 - password: honomara
 
 ~~~console
-$ cd host_data
-$ cd scripts
+$ cd /vagrant/scripts
 $ ./setup_db.sh
 ~~~
 
