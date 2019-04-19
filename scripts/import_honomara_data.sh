@@ -2,7 +2,7 @@
 set -eu
 
 # import data of honomara
-SQL_DIR=../sql
+SQL_DIR=/vagrant/sql
 export PGPASSWORD=honomara
 psql -U honomara -d honomara -f ${SQL_DIR}/create.sql
 psql -U honomara -d honomara -f ${SQL_DIR}/person_data.sql
