@@ -64,6 +64,7 @@ $ vagrant ssh
 
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 以降の説明は、古い可能性があります。
 ~~~console:local
 $ vagrant ssh
@@ -91,6 +92,7 @@ setup_mysql.shを実行した後
 member.ipynv->training.ipynb->after.ipynb->participants.ipynb
 
 の順に実行してみると良いでしょう。
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ### 4.Set up the Database
