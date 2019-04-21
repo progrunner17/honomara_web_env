@@ -59,6 +59,40 @@ $ vagrant ssh
 
 以降、仮想マシンに接続した状態での操作となります。
 
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+以降の説明は、古い可能性があります。
+~~~console:local
+$ vagrant ssh
+~~~
+をした後
+~~~console:guest
+$ cd /vagrant
+$ ./scripts/setup_jupyter.sh
+$ jupyter notebook &
+~~~
+を実行して
+
+[127.0.0.1:8888](http://127.0.0.1:8888)
+または
+[localhost:8888](localhost:8888)
+を開き、
+
+setup.ipynb
+を開いて、ノートブック中の説明を読んでください
+また、他のノートブックは、データベースをPostgreSQLからMySQLに移行するためのものです。
+setup_psql.sh
+import_honomara_data.sh
+setup_mysql.shを実行した後
+
+member.ipynv->training.ipynb->after.ipynb->participants.ipynb
+
+の順に実行してみると良いでしょう。
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 ### 4.Set up the Database
 `vagrant ssh`コマンドを実行すると、vagrantというユーザー名で/home/vagrantディレクトリに入ります。  
 
