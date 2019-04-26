@@ -13,9 +13,12 @@ if ! (pythin3 -c 'import mysql.connector'); then
   ./setup_pip3.sh
   fi
   sudo pip3 install mysql-connector-python
+  echo "create db named honomara"
   mysql  -u root --password='honomara' -e "CREATE DATABASE IF NOT EXISTS honomara CHARACTER SET 'utf8';"
-  mysql  -u root --password='honomara' -e "CREATE USER IF NOT EXISTS honomara@localhost IDENTIFIED BY honomara;"
-  mysql  -u root --password='honomara' -e "GRANT ALL PRIVILEGES ON honomara.* TO  honomara@localhost;"
+  echo "create user named honomara"
+  mysql  -u root --password='honomara' -e "CREATE USER IF NOT EXISTS honomara IDENTIFIED BY 'honomara';"
+  echo "add ownership to user honomara on db honomara"
+  mysql  -u root --password='honomara' -e "GRANT ALL PRIVILEGES ON honomara.* TO  honomara;"
 fi
 
 popd
