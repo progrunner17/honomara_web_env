@@ -12,7 +12,6 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "../", "/vagrant"
 
   config.vm.provision "shell", inline: <<-SHELL
-    export LC_ALL=C.UTF-8
     echo "export LC_ALL=C.UTF-8" >> /home/vagrant/.bashrc
     sudo apt update -y
     echo grub-pc hold | dpkg --set-selections
