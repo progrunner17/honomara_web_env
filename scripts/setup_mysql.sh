@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 set -eu 
+
+pushd $(dirname $0)
 
 echo "mysql-server-5.7 mysql-server/root_password password honomara" |sudo debconf-set-selections -
 echo "mysql-server-5.7 mysql-server/root_password_again password honomara" |sudo debconf-set-selections -
@@ -15,3 +17,5 @@ if ! (pythin3 -c 'import mysql.connector'); then
   mysql  -u root --password='honomara' -e "CREATE USER IF NOT EXISTS honomara@localhost IDENTIFIED BY honomara;"
   mysql  -u root --password='honomara' -e "GRANT ALL PRIVILEGES ON honomara.* TO  honomara@localhost;"
 fi
+
+popd

@@ -1,5 +1,7 @@
-#!/bin/sh 
+#!/bin/bash 
 set -eu
+
+pushd $(dirname $0)
 
 #install postgresql
 sudo apt install  postgresql-9.5 postgresql-server-dev-9.5 -y
@@ -18,3 +20,5 @@ if ! (python3 -c 'import psycopg2'); then
   sudo -u postgres psql -c "CREATE ROLE honomara WITH LOGIN PASSWORD 'honomara';"
   sudo -u postgres psql -c "CREATE DATABASE honomara ENCODING=UTF8 OWNER=honomara;"
 fi
+
+popd

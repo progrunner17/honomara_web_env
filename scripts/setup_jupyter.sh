@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
+
+pushd $(dirname $0)
 
 if ! (type pip3 > /dev/null 2>&1); then
 ./setup_pip3.sh
@@ -18,3 +20,4 @@ c.NotebookApp.open_browser = False
 c.NotebookApp.ip ='0.0.0.0'
 EOF
 
+popd
