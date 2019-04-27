@@ -79,7 +79,7 @@ $ jupyter notebook &
 
 [127.0.0.1:8888](http://127.0.0.1:8888)
 または
-[localhost:8888](localhost:8888)
+[localhost:8888](http://localhost:8888)
 を開き、
 
 setup.ipynb
