@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import cgitb
+import cgitb, os
 cgitb.enable()
-
 from wsgiref.handlers import CGIHandler
 from app import app
-CGIHandler().run(app)
 
+os.environ['SCRIPT_NAME'] = '/cgi-bin'
+
+CGIHandler().run(app)

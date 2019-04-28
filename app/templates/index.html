@@ -1,0 +1,6 @@
+{{body  | safe}}
+<ul>
+    {% for link in links.keys() %}
+    <li><a href={{links[link]}}>{{link}}</a></li>
+    {% endfor %}
+</ul>
