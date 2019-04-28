@@ -1,0 +1,18 @@
+{% extends "template.html" %}
+{% block body %}
+{{body  | safe}}
+
+<ul>
+    {% for year in range(start,start-6,-1) %}
+    <li>
+        <h3>{{ year }}年度入学</h3>
+        <ul>
+        {% for member in members[year] %}
+        {% if member['visible'] == 1  %}
+        <li>{{ member }}</li>        
+        {% endif %}
+        {% endfor %}
+    </ul></li>     
+    {% endfor %}
+</ul>
+{% endblock body %}

@@ -1,0 +1,21 @@
+{% extends "template.html" %}
+{% block body %}
+{{body  | safe}}
+{% for i in range(n) %}
+
+
+{% if i == 0 or articles[i]['date'] != articles[i-1]['date'] %}
+{% if i != 0 %}
+</ul>
+{% endif%}
+
+<h3>{{ articles[i]['date'] }}</h3>
+<ul>
+{% endif %}
+<li>
+        {{ articles[i] }}
+</li> 
+
+{% endfor %}
+</ul>
+{% endblock body %}

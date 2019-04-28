@@ -2,29 +2,17 @@ from db import MySQL
 
 
 class Member(MySQL):
-    def __init__(self):
-        return super().__init__()
+    def get_colnames(self):  # for test
+        data = self.query('SHOW COLUMNS FROM members')
+        return [col['Field'] for col in data]
 
-    def __del__(self):
-        return super().__del__()
-
-    def get_by_id(self, id):
-        if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM members WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
-        return data
-
-    def gets_by_year(self, year):
-        if type(year) != int:
-            raise TypeError
-        query = 'SELECT * FROM members WHERE year = %s;'
-        data = super.query(query, (year,))
-        return data
-
-    def gets_all(self):
-        query = 'SELECT * FROM members;'
-        data = super.query(query)
+    def get(self, id=None, year=None, limit=100):
+        if type(id) == int:
+            data = self.query('SELECT * FROM members WHERE member_id = %s LIMIT 1;', [id], dictionary=True)
+        elif type(year) == int:
+            data = self.query('SELECT * FROM members WHERE year = %s;', [year], dictionary=True)
+        else:
+            raise AttributeError
         return data
 
     def create(self, args):
@@ -80,20 +68,16 @@ class Member(MySQL):
 
 
 class Training(MySQL):
-    def __init__(self):
-        return super().__init__()
-
-    def __del__(self):
-        return super().__del__()
 
     def get_participants_by_id(self, id):
         raise NotImplementedError
 
-    def get_by_id(self, id):
+
+    def get(self, id=None, limit=1):
         if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM trainings WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
+            data = self.query('SELECT * FROM trainings ORDER BY date DESC LIMIT %s;', (limit,), dictionary=True)
+        else:
+            data = self.query('SELECT * FROM trainings WHERE training_id = %s DESC LIMIT %s;', (id, limit,), dictionary=True)
         return data
 
     def create(self, args):
@@ -113,20 +97,18 @@ class Training(MySQL):
 
 
 class After(MySQL):
-    def __init__(self):
-        return super().__init__()
-
-    def __del__(self):
-        return super().__del__()
+    def get_colnames(self):  # for test
+        data = self.query('SHOW COLUMNS FROM afters', dictionary=True)
+        return [col['Field'] for col in data]
 
     def get_participants_by_id(self, id):
         raise NotImplementedError
 
-    def get_by_id(self, id):
+    def get(self, id=None, limit=1):
         if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM afters WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
+            data = self.query('SELECT * FROM afters ORDER BY date DESC , after_stage DESC  LIMIT %s;', (limit,), dictionary=True)
+        else:
+            data = self.query('SELECT * FROM afters WHERE after_id = %s DESC LIMIT %s;', (id, limit,), dictionary=True)
         return data
 
     def create(self, args):
@@ -146,11 +128,6 @@ class After(MySQL):
 
 
 class Restaurant(MySQL):
-    def __init__(self):
-        return super().__init__()
-
-    def __del__(self):
-        return super().__del__()
 
     def get_participants_by_id(self, id):
         raise NotImplementedError
@@ -159,7 +136,7 @@ class Restaurant(MySQL):
         if type(id) != int:
             raise TypeError
         query = 'SELECT * FROM restaurants WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
+        data = self.query(query, (id,))
         return data
 
     def create(self, args):
@@ -179,11 +156,6 @@ class Restaurant(MySQL):
 
 
 class Race(MySQL):
-    def __init__(self):
-        return super().__init__()
-
-    def __del__(self):
-        return super().__del__()
 
     def get_participants_by_id(self, id):
         raise NotImplementedError
@@ -192,7 +164,7 @@ class Race(MySQL):
         if type(id) != int:
             raise TypeError
         query = 'SELECT * FROM races WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
+        data = self.query(query, (id,))
         return data
 
     def create(self, args):
@@ -212,11 +184,6 @@ class Race(MySQL):
 
 
 class Result(MySQL):
-    def __init__(self):
-        return super().__init__()
-
-    def __del__(self):
-        return super().__del__()
 
     def get_participants_by_id(self, id):
         raise NotImplementedError
@@ -225,7 +192,7 @@ class Result(MySQL):
         if type(id) != int:
             raise TypeError
         query = 'SELECT * FROM results WHERE member_id = %s LIMIT 1;'
-        data = super.query(query, (id,))
+        data = self.query(query, (id,))
         return data
 
     def create(self, args):

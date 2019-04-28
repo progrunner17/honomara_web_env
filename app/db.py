@@ -1,5 +1,6 @@
 import mysql.connector
 import os
+import logging
 
 
 class MySQL:
@@ -15,7 +16,9 @@ class MySQL:
 
     def __init__(self):
         if (not MySQL._conn) or MySQL._conn_num == 0:
-            mysql.connector.MySQLConnection(**self.dns)
+            MySQL._conn = mysql.connector.MySQLConnection(**MySQL._dns)
+            logging.debug('connection {}'.format(str(MySQL._conn.is_connected())))
+            print('connection {}'.format(str(MySQL._conn.is_connected())))
         MySQL._conn_num += 1
 
     def __del__(self):
@@ -23,10 +26,13 @@ class MySQL:
         if MySQL._conn_num == 0:  # need to be atomic... but...
             MySQL._conn.close()
 
-    def query(self, stmt, *args, **kwargs):
-        with MySQL._conn.cursor() as cursor:
-            cursor.execute(stmt)
-            data = cursor.fetchall()
+    def query(self, *args, **kwargs):
+        dictionary = kwargs.get('dictionary', True)
+        if not MySQL._conn.is_connected():
+            raise TypeError
+        cursor = MySQL._conn.cursor(dictionary=dictionary)
+        cursor.execute(*args)
+        data = cursor.fetchall()
         return data
 
     def exec(self, stmt, *args, **kwargs):

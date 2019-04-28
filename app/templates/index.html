@@ -1,6 +1,9 @@
-{{body  | safe}}
+{% extends "template.html" %}
+{% block body %}
 <ul>
+    {{body  | safe}}
     {% for link in links.keys() %}
     <li><a href={{links[link]}}>{{link}}</a></li>
     {% endfor %}
 </ul>
+{% endblock body %}
