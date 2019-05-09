@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from util import get_school_year
 from model import After, Member, Training
 from datetime import datetime
@@ -21,6 +21,20 @@ def index():
     return render_template('index.html', **render_args)
 
 
+@app.route('/manage')
+def manage():
+    render_args = {}
+    render_args['title'] = 'index page'
+    render_args['body'] = '''
+    <h1>manage Page!</h1>
+    <p>not implemented yet</>
+    '''
+    render_args['links'] = {"after register": url_for('after_register'),
+                            "training_register": url_for('training_register'),
+                            }
+    return render_template('index.html', **render_args)
+
+
 @app.route('/training')
 def training():
     body = "<h1>training Page!</h1>"
@@ -33,6 +47,23 @@ def training():
     render_args['n'] = len(render_args['articles'])
     # return render_template('template.html', **render_args)
     return render_template('training.html', **render_args)
+
+
+@app.route('/training/register', methods=["GET", "POST"])
+def training_register():
+    members = {}
+    current_year = get_school_year(datetime.now())
+    member = Member()
+    for year in range(current_year, current_year-6, -1):
+        tmp = member.get(year=year)
+        members[current_year + 1 - year] = {a['member_id']: a['show_name'] for a in tmp}
+    body = "<h1>training register Page!</h1>"
+    body += "<p>not implemented yet</>"
+    render_args = {}
+    render_args['title'] = 'manage page'
+    render_args['body'] = body
+    render_args['members'] = members
+    return render_template('training_register.html', **render_args)
 
 
 @app.route('/member')
@@ -70,6 +101,23 @@ def after():
     render_args['n'] = len(render_args['articles'])
     # return render_template('template.html', **render_args)
     return render_template('after.html', **render_args)
+
+
+@app.route('/after/register', methods=["GET", "POST"])
+def after_register():
+    members = {}
+    current_year = get_school_year(datetime.now())
+    member = Member()
+    for year in range(current_year, current_year-6, -1):
+        tmp = member.get(year=year)
+        members[current_year + 1 - year] = {a['member_id']: a['show_name'] for a in tmp}
+    body = "<h1>after register Page!</h1>"
+    body += "<p>not implemented yet</>"
+    render_args = {}
+    render_args['title'] = 'manage page'
+    render_args['body'] = body
+    render_args['members'] = members
+    return render_template('after_register.html', **render_args)
 
 
 @app.route('/result')

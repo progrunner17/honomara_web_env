@@ -10,9 +10,13 @@ class Member(MySQL):
         if type(id) == int:
             data = self.query('SELECT * FROM members WHERE member_id = %s LIMIT 1;', [id], dictionary=True)
         elif type(year) == int:
-            data = self.query('SELECT * FROM members WHERE year = %s;', [year], dictionary=True)
+            data = self.query('SELECT * FROM members WHERE year = %s AND visible=true;', [year], dictionary=True)
         else:
             raise AttributeError
+        return data
+
+    def get_show_names(self, year=None, limit=100):
+        data = self.query('SELECT member_id,show_name FROM members WHERE year = %s AND visible=true;', [year], dictionary=True)
         return data
 
     def create(self, args):
@@ -72,12 +76,13 @@ class Training(MySQL):
     def get_participants_by_id(self, id):
         raise NotImplementedError
 
-
     def get(self, id=None, limit=1):
         if type(id) != int:
-            data = self.query('SELECT * FROM trainings ORDER BY date DESC LIMIT %s;', (limit,), dictionary=True)
+            sql = 'SELECT * FROM trainings ORDER BY date DESC LIMIT %s;'
+            data = self.query(sql, (limit,), dictionary=True)
         else:
-            data = self.query('SELECT * FROM trainings WHERE training_id = %s DESC LIMIT %s;', (id, limit,), dictionary=True)
+            sql = 'SELECT*FROM trainings WHERE training_id=%s DESC LIMIT %s;'
+            data = self.query(sql, (id, limit,), dictionary=True)
         return data
 
     def create(self, args):

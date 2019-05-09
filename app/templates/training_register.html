@@ -1,0 +1,46 @@
+{% extends "template.html" %}
+{% block body %}
+<br>
+<form id="form-id" action="{{ action_url }}" method="post">
+<table>
+    <tr>
+        <th><label for="date">date</label></th>
+        <td><input type="date" name="date" id="date">
+        </td>
+    </tr>
+    <tr>
+        <th><label for="participants">participants</label></th>
+        <td>
+            <select id="participants" name="participants" form="form-id" multiple>
+            {% for grade, members_by_year in members.items() %}
+            <optgroup label="{{grade}}年">
+                {% for id, member in members_by_year.items() %}
+                <option value="{{ id }}">{{member}}</option>
+                {% endfor %}
+            </optgroup>            
+            {% endfor %}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th><label for="title">title</label></th>
+        <td><input type="text" name="title" id="title"></label></td>
+    </tr>
+    <tr>
+        <th><label for="comments">comments</label></th>
+        <td> <textarea name="comments" id="comments" cols="30" rows="5"></textarea></td>
+    </tr>
+</table>
+    
+    
+    <label for="password">password<input type="password" name="password" id="password"></label><br>
+    <label for="submit">submit<input type="submit" value="submit" id="submit"></label>
+</form>
+<h3>result</h3>
+<p>
+    {{ request }}
+    <br>
+    {{ request.form }}
+
+</p>
+{% endblock body %}

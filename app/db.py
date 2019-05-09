@@ -8,10 +8,10 @@ class MySQL:
     _dns = None
     _conn_num = 0
     _dns = {
-        'user': os.environ['MYSQL_DB_USER'],
-        'host': os.environ['MYSQL_DB_HOST'],
-        'password': os.environ['MYSQL_DB_PASS'],
-        'database': os.environ['MYSQL_DB_NAME']
+        'user': os.getenv('MYSQL_DB_USER', 'honomara'),
+        'host': os.getenv('MYSQL_DB_HOST', 'localhost'),
+        'password': os.getenv('MYSQL_DB_PASS', 'honomara'),
+        'database': os.getenv('MYSQL_DB_NAME', 'honomara')
     }
 
     def __init__(self):
