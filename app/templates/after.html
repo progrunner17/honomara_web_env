@@ -3,12 +3,14 @@
 {{body  | safe}}
 <ul>
 {% for after in afters %}
-        <li>{{ after }}
+        <li>
+                {{ after }} {{after.restaurant}}
                 <ul>
                 {% for participant in  after.participants %}
                 <li>{{ participant }}</li>                
                 {% endfor %}
                 </ul>
+                <p>{{after.comment}}</p>
         </li>
 {% endfor %}
 </ul>

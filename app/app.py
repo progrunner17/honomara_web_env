@@ -1,7 +1,8 @@
-from flask import Flask, render_template, url_for
-from util import get_school_year, year_to_grade
+from flask import Flask, render_template, url_for, request, redirect
+from util import year_to_grade, current_year
 from datetime import datetime
 import model as m
+
 app = Flask(__name__)
 
 
@@ -30,7 +31,6 @@ def manage():
 
 @app.route('/member')
 def member():
-    current_year = get_school_year(datetime.now())
     render_args = {}
     render_args['title'] = 'member page'
     render_args['body'] = '''
@@ -41,21 +41,67 @@ def member():
         year: m.session.query(m.Member).filter_by(year=year)
         for year in range(current_year, current_year-6, -1)
         }
-    render_args['start'] = current_year
+    render_args['sorted'] = sorted
     return render_template('member.html', **render_args)
 
 
-@app.route('/member/register', methods=["GET", "POST"])
+@app.route('/member/register')
 def member_register():
-    current_year = get_school_year(datetime.now())
     render_args = {}
+    render_args['method'] = 'POST'
+    render_args['action'] = url_for('member_confirm')
     render_args['current_year'] = current_year
     render_args['title'] = 'member register page'
     render_args['body'] = '''
             <h1>training register Page!</h1>
             <p>not implemented yet</>
     '''
-    return render_template('member_register.html', **render_args)
+    # TODO: ADD render_args['member'] with session
+    return render_template('member_edit.html', **render_args)
+
+
+@app.route('/member/confirm', methods=["POST", "PUT", "DELETE"])
+def member_confirm():
+    if request.form['confirmed'] == "true":
+        if request.method == "POST":
+            pass
+            # session.add(form=Member(request.form))
+            # session.commit()
+        elif request.method == "PUT":
+            # member = session.query(Member).get(request.form['member_id'])
+            # member. = request.form[]
+            # session.add(member)
+            # session.commit
+            pass
+        else:  # DELETE
+            # member = session.query(Member).get(request.form['member_id'])
+            # session.delete(Member)
+            # sesstion.commit()
+            pass
+        return redirect(url_for('member'))
+    else:
+        render_args = {}
+        render_args['method'] = request.method
+        render_args['action'] = url_for('member_confirm')
+        render_args['title'] = 'member register page'
+        render_args['body'] = '''
+                <h1>register confirm Page!</h1>
+                <p>not implemented yet</>
+        '''
+        # TODO: add error check especially about None
+        # TODO: move member generation code to Member constructor
+        member = {}
+        member['member_id'] = int(request.form.get('member_id', -1))
+        member['family_name'] = request.form.get('family_name')
+        member['first_name'] = request.form.get('first_name')
+        member['show_name'] = request.form.get('show_name')
+        member['kana'] = request.form.get('kana')
+        member['year'] = int(request.form.get('year'))
+        member['sex'] = int(request.form.get('sex'))
+        member['visible'] = int(request.form.get('visible'))
+        render_args['member'] = m.Member(**member)
+
+        return render_template('member_confirm.html', **render_args)
 
 
 @app.route('/training')
@@ -74,7 +120,6 @@ def training():
 
 @app.route('/training/register', methods=["GET", "POST"])
 def training_register():
-    current_year = get_school_year(datetime.now())
     render_args = {}
     render_args['title'] = 'training page'
     render_args['body'] = '''
@@ -89,7 +134,12 @@ def training_register():
             }
         for year in range(current_year, current_year-6, -1)
         }
-    return render_template('training_register.html', **render_args)
+    return render_template('training_edit.html', **render_args)
+
+
+@app.route('/training/confirm', methods=["POST", "PUT", "DELETE"])
+def training_confirm():
+    return "not implemented"
 
 
 @app.route('/after')
@@ -110,7 +160,6 @@ def after():
 
 @app.route('/after/register', methods=["GET", "POST"])
 def after_register():
-    current_year = get_school_year(datetime.now())
     render_args = {}
     render_args['title'] = 'manage page'
     render_args['body'] = '''
@@ -125,36 +174,35 @@ def after_register():
             }
         for year in range(current_year, current_year-6, -1)
         }
-    return render_template('after_register.html', **render_args)
+    render_args['today'] = "{:%Y-%m-%d}".format(datetime.now())
+    render_args['after'] = None
+    return render_template('after_edit.html', **render_args)
+
+
+@app.route('/after/confirm', methods=["POST", "PUT", "DELETE"])
+def after_confirm():
+    return "not implemented"
 
 
 @app.route('/result')
 def result():
-    body = "<h1>result Page!</h1>"
-    body += "<p>not implemented yet</>"
     render_args = {}
     render_args['title'] = 'result page'
-    render_args['body'] = body
+    render_args['body'] = '''
+            <h1>Result Page!</h1>
+            <p>not implemented yet</>
+        '''
     return render_template('template.html', **render_args)
 
 
 @app.route('/ranking')
 def ranking():
-    body = "<h1>ranking Page!</h1>"
-    body += "<p>not implemented yet</>"
     render_args = {}
     render_args['title'] = 'ranking page'
-    render_args['body'] = body
-    return render_template('template.html', **render_args)
-
-
-@app.route('/search')
-def search():
-    body = "<h1>search Page!</h1>"
-    body += "<p>not implemented yet</>"
-    render_args = {}
-    render_args['title'] = 'search page'
-    render_args['body'] = body
+    render_args['body'] = '''
+            <h1>Ranking Page!</h1>
+            <p>not implemented yet</>
+        '''
     return render_template('template.html', **render_args)
 
 

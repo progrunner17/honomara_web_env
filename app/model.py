@@ -5,7 +5,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 dns = 'mysql+mysqlconnector://honomara:honomara@localhost/honomara'
-
 engine = create_engine(dns, encoding="utf-8")
 Base = declarative_base()
 
@@ -34,7 +33,12 @@ class Member(Base):
         fields['first_name'] = self.first_name
         fields['show_name'] = self.show_name
         fields['year'] = self.year
-        fields['sex'] = 'male' if self.sex == 0 else 'female' if self.sex == 1 else 'other'
+        if self.sex == 0:
+            fields['sex'] = 'male'
+        elif self.sex == 1:
+            fields['sex'] = 'female'
+        else:
+            fields['sex'] = 'unknown or other'
         fields['visible'] = self.visible
         return "<Member('{member_id}','{family_name}', '{first_name}', '{show_name}', {year}, {sex}, {visible})>".format(**fields)
 
@@ -69,7 +73,6 @@ class After(Base):
     date = Column(Date, nullable=False)
     after_stage = Column(Integer, nullable=False, server_default=text('1'))
     restaurant_id = Column(Integer, ForeignKey('restaurants.restaurant_id'), nullable=False)
-#     restaurant_id = Column(Integer, nullable=False)
     total = Column(Integer)
     title = Column(String(128), nullable=False)
     comment = Column(Text)
@@ -81,7 +84,7 @@ class After(Base):
         order_by='Member.year, Member.kana'
     )
 
-    def __pagepr__(self):
+    def __repr__(self):
         return "<After(after_id:{}, {:%Y-%m-%d}, title:'{}')>".\
             format(self.after_id, self.date, self.title)
 
@@ -115,8 +118,8 @@ class Training(Base):
     )
 
     def __repr__(self):
-        return "<Training(training_id:{}, {:%Y-%m-%d}, place:{}, title:'{}')>".\
-            format(self.training_id, self.date, self.place, self.title)
+        return "<Training(training_id:{}, {:%Y-%m-%d}, place:{}, title:'{}')>"\
+            .format(self.training_id, self.date, self.place, self.title)
 
 
 Session = sessionmaker(bind=engine)

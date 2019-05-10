@@ -3,7 +3,7 @@
 {{body  | safe}}
 
 <ul>
-    {% for year in range(start,start-6,-1) %}
+    {% for year in sorted(members.keys(),reverse=True) %}
     <li>
         <h3>{{ year }}年度入学</h3>
         <ul>

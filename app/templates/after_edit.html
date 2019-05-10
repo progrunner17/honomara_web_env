@@ -5,17 +5,18 @@
 <table>
     <tr>
         <th><label for="date">date</label></th>
-        <td><input type="date" name="date" id="date">
+        <td><input type="date" name="date" id="date" value="{{after.date if after != None else today }}">
         </td>
     </tr>
     <tr>
         <th><label for="participants">participants</label></th>
         <td>
             <select id="participants" name="participants" form="form-id" multiple>
+            {% set selected_ids = [] if after == None else after.participants|map(attribute='member_id') %}
             {% for grade, members_by_year in members.items() %}
             <optgroup label="{{grade}}年">
                 {% for id, member in members_by_year.items() %}
-                <option value="{{ id }}">{{member}}</option>
+                <option value="{{ id }}"  {{"selected" if id in selected_ids }}>{{member}}</option>
                 {% endfor %}
             </optgroup>            
             {% endfor %}
@@ -41,6 +42,7 @@
     {{ request }}
     <br>
     {{ request.form }}
+    <br>
 
 </p>
 {% endblock body %}
