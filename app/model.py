@@ -1,216 +1,123 @@
-from db import MySQL
+from sqlalchemy import create_engine, text
+from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey, Boolean
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.ext.declarative import declarative_base
 
 
-class Member(MySQL):
-    def get_colnames(self):  # for test
-        data = self.query('SHOW COLUMNS FROM members')
-        return [col['Field'] for col in data]
+dns = 'mysql+mysqlconnector://honomara:honomara@localhost/honomara'
 
-    def get(self, id=None, year=None, limit=100):
-        if type(id) == int:
-            data = self.query('SELECT * FROM members WHERE member_id = %s LIMIT 1;', [id], dictionary=True)
-        elif type(year) == int:
-            data = self.query('SELECT * FROM members WHERE year = %s AND visible=true;', [year], dictionary=True)
-        else:
-            raise AttributeError
-        return data
-
-    def get_show_names(self, year=None, limit=100):
-        data = self.query('SELECT member_id,show_name FROM members WHERE year = %s AND visible=true;', [year], dictionary=True)
-        return data
-
-    def create(self, args):
-        if not args.gets('family_name', False):
-            raise LookupError
-        if not args.gets('first_name', False):
-            raise LookupError
-        if not args.gets('kana', False):
-            raise LookupError
-        if not args.gets('show_name', False):
-            raise LookupError
-        if not args.gets('sex', False):
-            raise LookupError
-        if not args.gets('year', False):
-            raise LookupError
-        # visible = true when created
-
-    def update(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        if args.gets('family_name', False):
-            pass
-        if args.gets('first_name', False):
-            pass
-        if args.gets('kana', False):
-            pass
-        if args.gets('show_name', False):
-            pass
-        if args.gets('sex', False):
-            pass
-        if args.gets('year', False):
-            pass
-        if args.gets('visible', False):
-            pass
-
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        if args.gets('family_name', False):
-            pass
-        if args.gets('first_name', False):
-            pass
-        if args.gets('kana', False):
-            pass
-        if args.gets('show_name', False):
-            pass
-        if args.gets('sex', False):
-            pass
-        if args.gets('year', False):
-            pass
-        if args.gets('visible', False):
-            pass
+engine = create_engine(dns, encoding="utf-8")
+Base = declarative_base()
 
 
-class Training(MySQL):
+class Member(Base):
+    __tablename__ = 'members'
 
-    def get_participants_by_id(self, id):
-        raise NotImplementedError
+    member_id = Column(Integer, primary_key=True)
+    family_name = Column(String(20), nullable=False)
+    first_name = Column(String(20), nullable=False)
+    show_name = Column(String(20), nullable=False)
+    kana = Column(String(40), nullable=False)
+    year = Column(Integer, nullable=False)  # 点数
+    sex = Column(Integer, nullable=False)  # 点数
+    visible = Column(Boolean, nullable=False)  # 点数
 
-    def get(self, id=None, limit=1):
-        if type(id) != int:
-            sql = 'SELECT * FROM trainings ORDER BY date DESC LIMIT %s;'
-            data = self.query(sql, (limit,), dictionary=True)
-        else:
-            sql = 'SELECT*FROM trainings WHERE training_id=%s DESC LIMIT %s;'
-            data = self.query(sql, (id, limit,), dictionary=True)
-        return data
-
-    def create(self, args):
-        raise NotImplementedError
-        if not args.gets('family_name', False):
-            raise LookupError
-
-    def update(self, id, **args):
-        raise NotImplementedError
-        if type(id) != int:
-            raise TypeError
-
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        # delete participants entries
-
-
-class After(MySQL):
-    def get_colnames(self):  # for test
-        data = self.query('SHOW COLUMNS FROM afters', dictionary=True)
-        return [col['Field'] for col in data]
-
-    def get_participants_by_id(self, id):
-        raise NotImplementedError
-
-    def get(self, id=None, limit=1):
-        if type(id) != int:
-            data = self.query('SELECT * FROM afters ORDER BY date DESC , after_stage DESC  LIMIT %s;', (limit,), dictionary=True)
-        else:
-            data = self.query('SELECT * FROM afters WHERE after_id = %s DESC LIMIT %s;', (id, limit,), dictionary=True)
-        return data
-
-    def create(self, args):
-        raise NotImplementedError
-        if not args.gets('family_name', False):
-            raise LookupError
-
-    def update(self, id, **args):
-        raise NotImplementedError
-        if type(id) != int:
-            raise TypeError
-
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        # delete participants entries
+#     afters = relationship(
+#         'After',
+#         secondary=AfterParticipant.__tablename__,
+#         back_populates='participants',
+#     )
+    def __repr__(self):
+        fields = {}
+        fields['member_id'] = self.member_id
+        fields['family_name'] = self.family_name
+        fields['first_name'] = self.first_name
+        fields['show_name'] = self.show_name
+        fields['year'] = self.year
+        fields['sex'] = 'male' if self.sex == 0 else 'female' if self.sex == 1 else 'other'
+        fields['visible'] = self.visible
+        return "<Member('{member_id}','{family_name}', '{first_name}', '{show_name}', {year}, {sex}, {visible})>".format(**fields)
 
 
-class Restaurant(MySQL):
+class AfterParticipant(Base):
+    __tablename__ = 'after_participants'
 
-    def get_participants_by_id(self, id):
-        raise NotImplementedError
+    member_id = Column(Integer, ForeignKey('members.member_id'), primary_key=True)
+    after_id = Column(Integer, ForeignKey('afters.after_id'), primary_key=True)
 
-    def get_by_id(self, id):
-        if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM restaurants WHERE member_id = %s LIMIT 1;'
-        data = self.query(query, (id,))
-        return data
-
-    def create(self, args):
-        raise NotImplementedError
-        if not args.gets('family_name', False):
-            raise LookupError
-
-    def update(self, id, **args):
-        raise NotImplementedError
-        if type(id) != int:
-            raise TypeError
-
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        # delete participants entries
+    def __repr__(self):
+        return "<AfterParticipant(after_id:{}, member_id:{})>".\
+            format(self.after_id, self.member_id)
 
 
-class Race(MySQL):
+class Restaurant(Base):
+    __tablename__ = 'restaurants'
+    restaurant_id = Column(Integer, primary_key=True)
+    restaurant_name = Column(String(64), nullable=False)
+    place = Column(String(20))
+    comment = Column(Text)
 
-    def get_participants_by_id(self, id):
-        raise NotImplementedError
-
-    def get_by_id(self, id):
-        if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM races WHERE member_id = %s LIMIT 1;'
-        data = self.query(query, (id,))
-        return data
-
-    def create(self, args):
-        raise NotImplementedError
-        if not args.gets('family_name', False):
-            raise LookupError
-
-    def update(self, id, **args):
-        raise NotImplementedError
-        if type(id) != int:
-            raise TypeError
-
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        # delete participants entries
+    def __repr__(self):
+        return "<Restaurant(id:{}, name:{}, plase:{})>".\
+            format(self.restaurant_id, self.restaurant_name, self.place)
 
 
-class Result(MySQL):
+class After(Base):
+    __tablename__ = 'afters'
 
-    def get_participants_by_id(self, id):
-        raise NotImplementedError
+    after_id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    after_stage = Column(Integer, nullable=False, server_default=text('1'))
+    restaurant_id = Column(Integer, ForeignKey('restaurants.restaurant_id'), nullable=False)
+#     restaurant_id = Column(Integer, nullable=False)
+    total = Column(Integer)
+    title = Column(String(128), nullable=False)
+    comment = Column(Text)
+    restaurant = relationship('Restaurant')
 
-    def get_by_id(self, id):
-        if type(id) != int:
-            raise TypeError
-        query = 'SELECT * FROM results WHERE member_id = %s LIMIT 1;'
-        data = self.query(query, (id,))
-        return data
+    participants = relationship(
+        'Member',
+        secondary=AfterParticipant.__tablename__,
+        order_by='Member.year, Member.kana'
+    )
 
-    def create(self, args):
-        raise NotImplementedError
-        if not args.gets('family_name', False):
-            raise LookupError
+    def __pagepr__(self):
+        return "<After(after_id:{}, {:%Y-%m-%d}, title:'{}')>".\
+            format(self.after_id, self.date, self.title)
 
-    def update(self, id, **args):
-        raise NotImplementedError
-        if type(id) != int:
-            raise TypeError
 
-    def delete(self, id, **args):
-        if type(id) != int:
-            raise TypeError
-        # delete participants entries
+class TrainingParticipant(Base):
+    __tablename__ = 'training_participants'
+
+    member_id = Column(Integer, ForeignKey('members.member_id'), primary_key=True)
+    training_id = Column(Integer, ForeignKey('trainings.training_id'), primary_key=True)
+
+    def __repr__(self):
+        return "<TrainingParticipant(training_id:{}, member_id:{})>".\
+            format(self.training_id, self.member_id)
+
+
+class Training(Base):
+    __tablename__ = 'trainings'
+
+    training_id = Column(Integer, primary_key=True)
+    date = Column(Date, nullable=False)
+    wday = Column(String(1))
+    place = Column(String(20), nullable=False)
+    weather = Column(String(20), nullable=False)
+    title = Column(String(20), nullable=False)
+    comment = Column(Text)
+
+    participants = relationship(
+        'Member',
+        secondary=TrainingParticipant.__tablename__,
+        order_by='Member.year, Member.kana'
+    )
+
+    def __repr__(self):
+        return "<Training(training_id:{}, {:%Y-%m-%d}, place:{}, title:'{}')>".\
+            format(self.training_id, self.date, self.place, self.title)
+
+
+Session = sessionmaker(bind=engine)
+session = Session()
