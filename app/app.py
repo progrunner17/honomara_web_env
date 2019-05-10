@@ -1,5 +1,5 @@
-from flask import Flask, render_template, url_for, request
-from util import get_school_year
+from flask import Flask, render_template, url_for
+from util import get_school_year, year_to_grade
 from model import After, Member, Training
 from datetime import datetime
 app = Flask(__name__)
@@ -9,10 +9,6 @@ app = Flask(__name__)
 def index():
     render_args = {}
     render_args['title'] = 'index page'
-    render_args['body'] = '''
-    <h1>index Page!</h1>
-    <p>not implemented yet</>
-    '''
     render_args['links'] = {"after": url_for('after'),
                             "training": url_for('training'),
                             "member": url_for('member'),
@@ -24,15 +20,41 @@ def index():
 @app.route('/manage')
 def manage():
     render_args = {}
-    render_args['title'] = 'index page'
-    render_args['body'] = '''
-    <h1>manage Page!</h1>
-    <p>not implemented yet</>
-    '''
-    render_args['links'] = {"after register": url_for('after_register'),
-                            "training_register": url_for('training_register'),
-                            }
+    render_args['title'] = 'manage page'
+    render_args['links'] = {
+        "after register": url_for('after_register'),
+        "training_register": url_for('training_register'),
+        }
     return render_template('index.html', **render_args)
+
+
+@app.route('/member')
+def member():
+    render_args = {}
+    render_args['title'] = 'member page'
+    render_args['body'] = body
+    members = {}
+    current_year = get_school_year(datetime.now())
+    member = Member()
+    for year in range(current_year, current_year-6, -1):
+        members[year] = member.get(year=year)
+    render_args['members'] = members
+    render_args['start'] = current_year
+    return render_template('member.html', **render_args)
+
+
+@app.route('/member/register', methods=["GET", "POST"])
+def member_register():
+    members = {}
+    current_year = get_school_year(datetime.now())
+    body = "<h1>training register Page!</h1>"
+    body += "<p>not implemented yet</>"
+    render_args = {}
+    render_args['current_year'] = current_year
+    render_args['title'] = 'member register page'
+    render_args['body'] = body
+    render_args['members'] = members
+    return render_template('member_register.html', **render_args)
 
 
 @app.route('/training')
@@ -54,33 +76,18 @@ def training_register():
     members = {}
     current_year = get_school_year(datetime.now())
     member = Member()
-    for year in range(current_year, current_year-6, -1):
-        tmp = member.get(year=year)
-        members[current_year + 1 - year] = {a['member_id']: a['show_name'] for a in tmp}
+    members = {
+        year_to_grade(year, current_year):
+        {a['member_id']: a['show_name'] for a in member.get(year=year)}
+        for year in range(current_year, current_year-6, -1)
+        }
     body = "<h1>training register Page!</h1>"
     body += "<p>not implemented yet</>"
     render_args = {}
-    render_args['title'] = 'manage page'
+    render_args['title'] = 'training page'
     render_args['body'] = body
     render_args['members'] = members
     return render_template('training_register.html', **render_args)
-
-
-@app.route('/member')
-def member():
-    body = "<h1>member Page!</h1>"
-    body += "<p>not implemented yet</>"
-    render_args = {}
-    render_args['title'] = 'member page'
-    render_args['body'] = body
-    members = {}
-    current_year = get_school_year(datetime.now())
-    member = Member()
-    for year in range(current_year, current_year-6, -1):
-        members[year] = member.get(year=year)
-    render_args['members'] = members
-    render_args['start'] = current_year
-    return render_template('member.html', **render_args)
 
 
 @app.route('/after')
