@@ -1,0 +1,27 @@
+{% extends "template.html" %}
+{% block body %}
+{{body  | safe}}
+
+<dl>
+    <dt>after_id</dt>
+    <dd>{{after.after_id}}</dd>
+    <dt>日程</dt>
+    <dd>{{after.date}}</dd>
+    <dt>タイトル</dt>
+    <dd>{{after.title}}</dd>
+    <dt>コメント</dt>
+    <!-- TODO: セキュリティ的にやばい -->
+    <dd>{{after.comment.replace('\n',"<br>")|safe}}</dd>
+</dl>
+
+<h3>参加者</h3>
+<ul>
+{% for participant in after.participants %}
+<li>{{ participant.show_name }}</li>
+{% endfor %}
+
+</ul>
+
+<button type="submit">編集</button>
+<button type="submit">削除</button>
+{% endblock body %}

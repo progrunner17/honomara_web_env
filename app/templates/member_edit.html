@@ -7,36 +7,36 @@
 <table>
     <tr>
         <th><label for="family_name">姓</label></th>
-        <td colspan="3"><input type="text" name="family_name" id="family_name" value="{{member.family_name}}" ></td>
+        <td colspan="3"><input type="text" name="family_name" id="family_name" value="{{member.family_name}}" placeholder="input family name" required></td>
     </tr>
     <tr>
             <th><label for="first_name">名</label></th>
-            <td colspan="3"><input type="text" name="first_name" id="first_name" value="{{member.first_name}}"></td>
+            <td colspan="3"><input type="text" name="first_name" id="first_name" value="{{member.first_name}}" placeholder="input first name" required></td>
     </tr>
     <tr>
             <th><label for="kana">フリガナ</label></th>
-            <td colspan="3"><input type="text" name="kana" id="kana" value="{{member.kana}}"></label></td>
+            <td colspan="3"><input type="text" name="kana" id="kana" value="{{member.kana}}" placeholder="input kana for full name"　required></td>
     </tr>
     <tr>
             <th><label for="show_name">表示名</label></th>
-            <td colspan="3"><input type="text" name="show_name" id="show_name" value="{{member.show_name}}"></label></td>
+            <td colspan="3"><input type="text" name="show_name" id="show_name" value="{{member.show_name}}" placeholder="input show name (not required)" ></td>
     </tr>
     <tr>
             <th><label for="year">入学年度</label></th>
-            <td colspan="3"><input type="number" name="year" id="year" value={{member.year if member != None else current_year}}></label></td>
+            <td colspan="3"><input type="number" name="year" id="year" value={{member.year if member != None else current_year}} min="1980" max="2050" required></td>
     </tr>
     <tr>
         <th>sex</th>
-        <td><label for="male">男性<input id="male" type="radio" name="sex" value=0 {{ "checked" if member !=None and member.sex == 0}}></td></label>
-        <td><label for="female">女性<input id="female" type="radio" name="sex" value=1 {{ "checked" if member !=None and  member.sex == 1}}></td></label>
-        <td><label for="other">不明<input id="other" type="radio" name="sex" value=-1 {{ "checked" if ( member == None or member.sex < 0) }} ></td></label>
+        <td><label for="male">男性<input id="male" type="radio" name="sex" value=0 {{ "checked" if member !=None and member.sex == 0}}></label></td>
+        <td><label for="female">女性<input id="female" type="radio" name="sex" value=1 {{ "checked" if member !=None and  member.sex == 1}}></label></td>
+        <td><label for="other">不明<input id="other" type="radio" name="sex" value=-1 {{ "checked" if ( member == None or member.sex < 0) }} ></label></td>
     </tr>
 </table>
 <input type="checkbox" name="visible" id="visible" value="true" checked hidden>
-<input type="checkbox" name="confirmed" value="false" checked hidden>
+<input type="checkbox" name="confirmed" value="" checked hidden>
 
-<label for="password">password<input type="password" name="password" id="password"></label><br>
-<label for="submit">submit<input type="submit" value="submit" id="submit"></label>
+<label for="password">password<input type="password" name="password" id="password" required></label><br>
+<label for="submit">submit<input type="submit" value="submit" id="submit" hidden></label>
 </form>
 <h3>result</h3>
 <p>

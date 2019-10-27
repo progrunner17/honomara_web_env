@@ -2,7 +2,8 @@ from sqlalchemy import create_engine, text
 from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey, Boolean
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-
+# from datetime import datetime
+from util import get_wday, str_to_date
 
 dns = 'mysql+mysqlconnector://honomara:honomara@localhost/honomara'
 engine = create_engine(dns, encoding="utf-8")
@@ -17,15 +18,31 @@ class Member(Base):
     first_name = Column(String(20), nullable=False)
     show_name = Column(String(20), nullable=False)
     kana = Column(String(40), nullable=False)
-    year = Column(Integer, nullable=False)  # 点数
-    sex = Column(Integer, nullable=False)  # 点数
-    visible = Column(Boolean, nullable=False)  # 点数
+    year = Column(Integer, nullable=False)
+    sex = Column(Integer, nullable=False)
+    visible = Column(Boolean, nullable=False)
 
-#     afters = relationship(
-#         'After',
-#         secondary=AfterParticipant.__tablename__,
-#         back_populates='participants',
-#     )
+    def __init__(self, form=None, **args):
+        if form is not None:
+            args = {}
+            if form.get('member_id') != '':
+                args['member_id'] = int(form.get('member_id'))
+            else:
+                args['member_id'] = None
+
+            args['family_name'] = form.get('family_name')
+            args['first_name'] = form.get('first_name')
+
+            if form.get('show_name') != '':
+                args['show_name'] = form.get('show_name')
+            else:
+                args['show_name'] = args['family_name']
+            args['kana'] = form.get('kana')
+            args['year'] = int(form.get('year'))
+            args['sex'] = int(form.get('sex'))
+            args['visible'] = bool(form.get('visible'))
+        return super().__init__(**args)
+
     def __repr__(self):
         fields = {}
         fields['member_id'] = self.member_id
@@ -84,6 +101,26 @@ class After(Base):
         order_by='Member.year, Member.kana'
     )
 
+    def __init__(self, form=None, **args):
+        if form is not None:
+            args = {}
+            if form.get('after_id') != '':
+                args['after_id'] = int(form.get('after_id'))
+            else:
+                args['after_id'] = None
+            args['date'] = form.get('date')
+            args['after_stage'] = int(form.get('after_stage'))
+            args['restaurant_id'] = int(form.get('restaurant_id'))
+            args['total'] = 0   # TODO
+            args['title'] = form.get('title')
+            args['comment'] = form.get('comment')
+            participants = []
+            for id in form.getlist('participants'):
+                member = session.query(Member).get(id)
+                participants.append(member)
+            args['participants'] = participants
+        return super().__init__(**args)
+
     def __repr__(self):
         return "<After(after_id:{}, {:%Y-%m-%d}, title:'{}')>".\
             format(self.after_id, self.date, self.title)
@@ -116,6 +153,27 @@ class Training(Base):
         secondary=TrainingParticipant.__tablename__,
         order_by='Member.year, Member.kana'
     )
+
+    def __init__(self, form=None, **args):
+        if form is not None:
+            args = {}
+            if form.get('training_id') != '':
+                args['training_id'] = int(form.get('training_id'))
+            else:
+                args['training_id'] = None
+            args['date'] = str_to_date(form.get('date'))
+            args['wday'] = get_wday(args['date'])
+            # args['restaurant_id'] = int(form.get('restaurant_id', 0))
+            args['place'] = form.get('place')   # TODO
+            args['weather'] = form.get('weather')
+            args['title'] = form.get('title')
+            args['comment'] = form.get('comment')
+            participants = []
+            for id in form.getlist('participants'):
+                member = session.query(Member).get(id)
+                participants.append(member)
+            args['participants'] = participants
+        return super().__init__(**args)
 
     def __repr__(self):
         return "<Training(training_id:{}, {:%Y-%m-%d}, place:{}, title:'{}')>"\

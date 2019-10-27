@@ -1,5 +1,9 @@
 from flask import render_template as flask_render_template
-from datetime import datetime
+from datetime import date, datetime
+from locale import setlocale, LC_TIME
+
+
+setlocale(LC_TIME, 'ja_JP.UTF-8')  # for get_wday
 
 
 def render(template, **args):
@@ -18,4 +22,12 @@ def get_school_year(date):
         return date.year
 
 
-current_year = get_school_year(datetime.now())
+def str_to_date(str):
+    return datetime.strptime(str, '%Y-%m-%d').date()
+
+
+def get_wday(date):
+    return date.strftime('%a')
+
+
+current_year = get_school_year(date.today())

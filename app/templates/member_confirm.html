@@ -2,45 +2,55 @@
 {% block body %}
 <br>
 <form id="form-id" action="{{acion}}" method="{{method}}">
-<input type="number" name="member_id" id="member_id" value="{{user.member_id}}" hidden>
 
 <table>
     <tr>
         <th>姓:</th>
-        <td colspan="3">{{user.family_name}}</td>
+        <td colspan="3">{{member.family_name}}</td>
     </tr>
     <tr>
         <th>名:</th>
-        <td colspan="3"> {{user.first_name}} </td>
+        <td colspan="3"> {{member.first_name}} </td>
     </tr>
     <tr>
         <th>フリガナ:</th>
-        <td colspan="3">{{user.kana}}</td>
+        <td colspan="3">{{member.kana}}</td>
     </tr>
     <tr>
         <th>表示名:</th>
-        <td colspan="3">{{user.show_name}}</td>
+        <td colspan="3">{{member.show_name}}</td>
     </tr>
     <tr>
         <th>入学年度:</th>
-        <td colspan="3">{{user.year}}</td>
+        <td colspan="3">{{member.year}}</td>
     </tr>
     <tr>
         <th>性別:</th>
-        <td colspan="3">{{"男性" if user.sex == 0 else "女性" if user.sex == 1 else "不明"}}</td>
+        <td colspan="3">{{"男性" if member.sex == 0 else "女性" if member.sex == 1 else "不明"}}</td>
     </tr>
     <tr>
         <th>表示:</th>
-        <td colspan="3">{{user.visible}}</td>
+        <td colspan="3">{{member.visible}}</td>
     </tr>
 </table>
-<input type="checkbox" name="confirmed" value="true" hidden checked>
-<label for="submit">登録する<input type="submit" value="submit" id="submit">
+
+<input type="number" name="member_id" id="member_id" value="{{member.member_id}}" hidden>
+<input type="text" name="family_name" id="family_name" value="{{member.family_name}}" required hidden>
+<input type="text" name="first_name" id="first_name" value="{{member.first_name}}" required hidden>
+<input type="text" name="kana" id="kana" value="{{member.kana}}" required hidden>
+<input type="text" name="show_name" id="show_name" value="{{member.show_name}}" required hidden>
+<input type="number" name="year" id="year" value={{member.year}} required hidden>
+<input type="number" name="sex" id="sex" value={{member.sex}} required hidden>
+<input type="text" name="visible" id="visible" value={{member.visible}} required hidden>
+<input type="checkbox" name="confirmed" value="True" hidden checked>
+<label for="submit">登録する<input type="submit" value="submit" id="submit" hidden></label>
 </form>
 <h3>result</h3>
 <p>
     {{ request }}
     <br>
     {{ request.form }}
+    <br>
+    {{ member }}
 </p>
 {% endblock body %}

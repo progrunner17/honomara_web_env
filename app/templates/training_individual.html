@@ -1,0 +1,33 @@
+{% extends "template.html" %}
+{% block body %}
+{{body  | safe}}
+
+<dl>
+    <dt>training_id</dt>
+    <dd>{{training.training_id}}</dd>
+    <dt>日程</dt>
+    <dd>{{training.date}}</dd>
+    <dt>曜日</dt>
+    <dd>{{training.wday}}</dd>
+    <dt>タイトル</dt>
+    <dd>{{training.title}}</dd>
+    <dt>コメント</dt>
+    <!-- TODO: セキュリティ的にやばい -->
+    <dd>{{training.comment.replace('\n',"<br>")|safe}}</dd>
+    <dt>場所</dt>
+    <dd>{{training.place}}</dd>
+    <dt>天気</dt>
+    <dd>{{training.weather}}</dd>
+</dl>
+
+<h3>参加者</h3>
+<ul>
+{% for participant in training.participants %}
+<li>{{ participant.show_name }}</li>
+{% endfor %}
+
+</ul>
+
+<button type="submit">編集</button>
+<button type="submit">削除</button>
+{% endblock body %}
