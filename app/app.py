@@ -13,7 +13,10 @@ def index():
                             "training": url_for('training'),
                             "member": url_for('member'),
                             "result": url_for('result'),
-                            "ranking": url_for('ranking')}
+                            "race": url_for('race'),
+                            "ranking": url_for('ranking'),
+                            "manage": url_for('manage'),
+                            }
     render_args['sorted'] = sorted
     return render_template('index.html', **render_args)
 
@@ -25,6 +28,9 @@ def manage():
     render_args['links'] = {
         "after register": url_for('after_register'),
         "training_register": url_for('training_register'),
+        "member_register": url_for('member_register'),
+        "result_register": url_for('result_register'),
+        "race_register": url_for('race_register'),
         }
     return render_template('index.html', **render_args)
 
@@ -64,7 +70,7 @@ def member_register():
     render_args['current_year'] = current_year
     render_args['title'] = 'member register page'
     render_args['body'] = '''
-            <h1>training register Page!</h1>
+            <h1>member register Page!</h1>
             <p>not implemented yet</>
     '''
     # TODO: ADD render_args['member'] with session
@@ -80,7 +86,7 @@ def member_confirm():
             # TODO: delete related entries first!!
             
             m.session.delete(member)
-        else:
+        else: # TODO: POST(登録)とPUT(編集)が判断
             member = m.Member(form=request.form)
             m.session.add(member)
         m.session.commit()
@@ -260,6 +266,43 @@ def result():
     return render_template('template.html', **render_args)
 
 
+@app.route('/result/register')
+def result_register():
+    return "not implemented"
+
+
+@app.route('/race')
+def race():
+    render_args = {}
+    render_args['title'] = 'race page'
+    render_args['body'] = '''
+            <h1>race Page!</h1>
+            <p>not implemented yet</>
+        '''
+    return render_template('template.html', **render_args)
+
+
+@app.route('/race/register')
+def race_register():
+    return "not implemented"
+
+
+@app.route('/restaurant')
+def restaurant():
+    render_args = {}
+    render_args['title'] = 'restaurant page'
+    render_args['body'] = '''
+            <h1>restaurant Page!</h1>
+            <p>not implemented yet</>
+        '''
+    return render_template('template.html', **render_args)
+
+
+@app.route('/restaurant/register')
+def restaurant_register():
+    return "not implemented"
+
+
 @app.route('/ranking')
 def ranking():
     render_args = {}
@@ -269,6 +312,7 @@ def ranking():
             <p>not implemented yet</>
         '''
     return render_template('template.html', **render_args)
+
 
 
 if __name__ == "__main__":
