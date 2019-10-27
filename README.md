@@ -59,13 +59,6 @@ $ vagrant ssh
 
 以降、仮想マシンに接続した状態での操作となります。
 
-
-
-
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-以降の説明は、古い可能性があります。
 ~~~console:local
 $ vagrant ssh
 ~~~
@@ -77,65 +70,21 @@ $ jupyter notebook &
 ~~~
 を実行して
 
-[127.0.0.1:8888](http://127.0.0.1:8888)
+[127.0.0.1:9999](http://127.0.0.1:9999)
 または
-[localhost:8888](http://localhost:8888)
+[localhost:9999](http://localhost:9999)
 を開き、
 
-setup.ipynb
-を開いて、ノートブック中の説明を読んでください
-また、他のノートブックは、データベースをPostgreSQLからMySQLに移行するためのものです。
-setup_psql.sh
-import_honomara_data.sh
-setup_mysql.shを実行した後
+`setup.ipynb`
+を開いて、ノートブック中の説明を読んでください。
 
-member.ipynv->training.ipynb->after.ipynb->participants.ipynb
-
-の順に実行してみると良いでしょう。
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-### 4.Set up the Database
-`vagrant ssh`コマンドを実行すると、vagrantというユーザー名で/home/vagrantディレクトリに入ります。  
-
-このリポジトリ（のルートディレクトリ）は起動した仮想マシン内の/vagrantディレクトリと同期するようになっています。  
-scriptsディレクトリ中にあるスクリプトを設定することで、様々な環境が構築できるようになっています。   
-まず`setup_postgres.sh`というスクリプトがあるので実行してください。  
-すると、データベース（postgresqlというソフト）がインストールされます。  
-
-次に`import_honomara.sh`というスクリプトがあるので実行してください。
-ホノマラの過去のデータがデータベースにインポートされます。
-
-接続設定は以下のとおりです
-
-- database: honomara
-- user(role): honomara
-- password: honomara
-
-~~~console
-$ cd /vagrant/scripts
-$ ./setup_postgres.sh
-$ ./import_honomara_data.sh
-~~~
-
-
-### Test and try the database
-早速データベースを試してみましょう。  
-`psql`というコマンドでデータベースに接続します。    
-いろいろなSQLを試して、データを扱う練習をすると良いです。    
-
-~~~console
-$ psql -U honomara -d honomara
-ここでパスワードを聞かれるので、honomaraと入力する
-honomara=> SELECT * FROM person LIMIT 10;
-それっぽいデータが表示される。
-honomara=>\q
-\qと入力すると終了する。
-$
-~~~
+作成中のアプリを使えるようになるはずです。
+また、setupノートブックで言及が無いノートブックも挙げてあるので、見てみると良いかもしれません。
 
 ### Exit from the virtual machine
-`exit`コマンドで仮想マシンから抜けられます。
+
+なお、1度jupyter notebookを起動したらターミナルは閉じて構いません。
+`exit` コマンドまたは `Ctrl+d` で仮想マシンから抜けられます。
 
 
 ### Halt or suspend the virtual machine
@@ -162,8 +111,4 @@ $ psql -U honomara -d honomara -f SQLファイル名
 ~~~
 setup_db.shファイルを読むと参考になるかもしれません。
 
-
-## Loadmap
-WEBサーバーや言語ランタイム(PHP,Python,Ruby)等の設定を追加していくつもりです。  
-(一応設定スクリプトは書いたのですが、ドキュメントを書くのが疲れたので、今はここまで。  
-気になる人は`scripts`ディレクトリを見てみてください。)
+単純にログインしてSQLを実行するのにも使えますが、整形が大変なのでノートブックからpythonでデータを取得するほうが遊びやすいと思います。
