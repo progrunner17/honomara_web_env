@@ -1,9 +1,0 @@
-{% extends "template.html" %}
-{% block body %}
-<ul>
-    <h1></h1>
-    {% for link in sorted(links.keys()) %}
-    <li><a href={{links[link]}}>{{link}}</a></li>
-    {% endfor %}
-</ul>
-{% endblock body %}
