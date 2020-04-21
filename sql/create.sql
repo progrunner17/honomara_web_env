@@ -7,6 +7,7 @@
 -- create scheme
 
 -- create tables
+SET client_min_messages TO WARNING;
 
 CREATE TABLE IF NOT EXISTS   public.person (
     person_id integer NOT NULL,
@@ -70,8 +71,7 @@ CREATE INDEX IF NOT EXISTS training_date_index ON public.training USING btree (d
 
 CREATE TABLE IF NOT EXISTS  public.participant (
     id character varying(10),
-    person_id integer,
-    FOREIGN KEY (person_id) REFERENCES public.person (person_id)
+    person_id integer
 );
 
 ALTER TABLE public.participant OWNER TO honomara;
