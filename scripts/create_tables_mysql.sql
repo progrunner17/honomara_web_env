@@ -19,7 +19,9 @@ CREATE TABLE IF NOT EXISTS training (
   `weather` VARCHAR(30),
   `title`   VARCHAR(100)  NOT NULL,
   `comment` TEXT,
-  INDEX USING BTREE (date)
+  INDEX USING BTREE (date),
+  FULLTEXT (title) WITH PARSER ngram,
+  FULLTEXT (comment) WITH PARSER ngram
 );
 
 CREATE TABLE IF NOT EXISTS restaurant (
@@ -37,7 +39,9 @@ CREATE TABLE IF NOT EXISTS after (
   `restaurant_id` INT NOT NULL, -- FOREIGN KEY (`restaurant_id`) REFERENCES restaurant(`id`),
   `title`         VARCHAR(100) NOT NULL,
   `comment`       TEXT,
-  INDEX USING BTREE(`date`)
+  INDEX USING BTREE(`date`),
+  FULLTEXT (title) WITH PARSER ngram,
+  FULLTEXT (comment) WITH PARSER ngram
 );
 
 CREATE TABLE IF NOT EXISTS  after_participant (
