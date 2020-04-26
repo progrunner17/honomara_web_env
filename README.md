@@ -9,7 +9,7 @@ webサイトの開発には、WEBサーバーが必要になりますが、
 
 ## Prerequisites
 このリポジトリを使うには以下の２つのソフトウェアが必要になります。
-- Vagrant 
+- Vagrant
 - Virtualbox
 
 Macの人は以下のコマンドでインストールできます
@@ -27,7 +27,7 @@ LinuxやWindowsの場合は、自分で以下公式サイトからインスト�
 
 ### 1.Clone this repo
 
-VagrantとVirtualboxをインストールしたら、  
+VagrantとVirtualboxをインストールしたら、
 このリポジトリを以下のコマンドでダウンロードしてください。
 
 - ※リポジトリとは、簡単に説明すると、gitが管理するディレクトリ(フォルダ)のことです
@@ -64,6 +64,23 @@ $ vagrant ssh
 ~~~
 をした後
 ~~~console:guest
+$ cd /vagrant/scripts
+$ ./setup_all.sh
+$ ./import_data_to_postgres.sh
+$ ./migrate_data_to_mysql.sh
+~~~
+を実行すれば、  
+[127.0.0.1:8080/cgi-bin](http://127.0.0.1:8080/cgi-bin)  
+からサイトを見れると思います。  
+デバッグ時は、ゲストの`/vagrant/app`ディレクトリで`python3 app.py`を実行して  
+[127.0.0.1:5000/cgi-bin](http://127.0.0.1:5000)  
+から見ると良いと思います。
+
+なお、現在更新されていませんが、  
+以下の方法でjupyter noteookを見ると、大まかな解説が書いてあるので理解の助けになるかもしれません。  
+ただ、重ねて注意ですが、現在メンテナンスされておらず、齟齬があるので、
+詳しくは、上記のスクリプトを読むと良いでしょう。
+~~~console:guest
 $ cd /vagrant
 $ ./scripts/setup_jupyter.sh
 $ jupyter notebook &
@@ -99,8 +116,8 @@ $ jupyter notebook &
 
 
 ### Reset the virtual machine
-vagrant ディレクトリで`vagrant destroy`仮想マシンを破壊できます。  
-「データをリセットしたい」、「よくわからなくなった」という場合は  
+vagrant ディレクトリで`vagrant destroy`仮想マシンを破壊できます。
+「データをリセットしたい」、「よくわからなくなった」という場合は
 このコマンドで仮想マシンを廃棄した後再度上から順に実行しましょう。
 
 ## tips
