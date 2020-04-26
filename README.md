@@ -69,7 +69,7 @@ $ ./setup_all.sh
 $ ./import_data_to_postgres.sh
 $ ./migrate_data_to_mysql.sh
 ~~~
-を実行すれば、  
+を実行して、`app`ディレクトリに [honomara_members_siteのリポジトリ](https://github.com/progrunner17/honomara_members_site) かそのフォークをcloneすれば
 [127.0.0.1:8080/cgi-bin](http://127.0.0.1:8080/cgi-bin)  
 からサイトを見れると思います。  
 デバッグ時は、ゲストの`/vagrant/app`ディレクトリで`python3 app.py`を実行して  
