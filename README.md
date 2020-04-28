@@ -129,3 +129,26 @@ $ psql -U honomara -d honomara -f SQLファイル名
 setup_db.shファイルを読むと参考になるかもしれません。
 
 単純にログインしてSQLを実行するのにも使えますが、整形が大変なのでノートブックからpythonでデータを取得するほうが遊びやすいと思います。
+
+## Trouble shooting
+
+### ホスト、ゲスト間のフォルダ共有ができない
+`vagrant up`した際、[Qiita-Vagrant ファイル共有とマウントエラー対処法](https://qiita.com/KZ-taran/items/f78790b580e3f8227173#%E3%83%9E%E3%82%A6%E3%83%B3%E3%83%88%E3%82%A8%E3%83%A9%E3%83%BC)
+のようなエラーメッセージが表示され、ホスト、ゲスト間のフォルダ共有ができていないことがあります。
+原因はVirtualBox Guest Additions(ホストOSとゲストOSの統合を行うもの)のバージョンの不一致のようです。
+
+解決法は他にもありますが、バージョンを一致させるのが良いです。
+
+ホストの方が古い場合は、VirtualBoxの最新版をダウンロードしてインストールします。
+(homebrewでインストールしてもバージョンが古い場合があります。)
+
+ゲストの方が古い場合は、「vagrant-vbguest」(Guest Additionsを自動更新してくれるプラグイン)をインストールします。
+
+以下のコマンドでインストールできます。
+~~~console
+$ vagrant plugin install vagrant-vbguest
+~~~
+
+仮想マシンを起動し、エラーメッセージが出なくなればOKです。
+
+[こちら]( https://qiita.com/ozawan/items/9751dcfd9bd4c470cd82)の記事も参考になります。
