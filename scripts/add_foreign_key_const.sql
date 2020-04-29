@@ -3,9 +3,7 @@ ALTER TABLE after_participant    ADD CONSTRAINT FOREIGN KEY (after_id)          
 ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (member_id)             REFERENCES member(id);
 ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (training_id)           REFERENCES training(id);
 ALTER TABLE after                ADD CONSTRAINT FOREIGN KEY (restaurant_id)         REFERENCES restaurant(id);
-ALTER TABLE competition_dates    ADD CONSTRAINT FOREIGN KEY (competition_id)        REFERENCES competitions(id);
 ALTER TABLE race_types           ADD CONSTRAINT FOREIGN KEY (competition_id)        REFERENCES competitions(id);
-ALTER TABLE races                ADD CONSTRAINT FOREIGN KEY (competition_date_id)   REFERENCES competition_dates(id);
-ALTER TABLE races                ADD CONSTRAINT FOREIGN KEY (race_type_id)          REFERENCES race_types(id);
+ALTER TABLE results              ADD CONSTRAINT FOREIGN KEY (competition_id)        REFERENCES competitions(id);
+ALTER TABLE results              ADD CONSTRAINT FOREIGN KEY (race_type_id)          REFERENCES race_types(id);
 ALTER TABLE results              ADD CONSTRAINT FOREIGN KEY (member_id)             REFERENCES member(id);
-ALTER TABLE results              ADD CONSTRAINT FOREIGN KEY (race_id)               REFERENCES races(id);
