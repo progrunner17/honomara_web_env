@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS competitions (
   `comment`   TEXT
 );
 
-CREATE TABLE IF NOT EXISTS race_types (
+CREATE TABLE IF NOT EXISTS races (
   `id`                      INT         PRIMARY KEY AUTO_INCREMENT,
   `competition_id`          INT         NOT NULL, -- FOREIGN KEY REFERENCES competitions(id)
   `show_name`               VARCHAR(30),
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS results (
   `date`                  DATE        NOT NULL,
   `member_id`             INT         NOT NULL,  -- FOREIGN KEY REFERENCES member(id)
   `competition_id`        INT         NOT NULL,  -- FOREIGN KEY REFERENCES competition_date(id)
-  `race_type_id`          INT         NOT NULL,  -- FOREIGN KEY REFERENCES race_types(id)
+  `race_id`               INT         NOT NULL,  -- FOREIGN KEY REFERENCES race_types(id)
   `record`                INT         NOT NULL    DEFAULT 0,
   `comment`               TEXT
 );

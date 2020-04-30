@@ -264,7 +264,7 @@ for d in ds:
     msql.query(
         'INSERT INTO competitions (name, show_name) VALUES (%s, %s);', (d, d))
 # race_types
-print("migrating race_types")
+print("migrating races")
 ds = psql.query('''
 SELECT distance_id, race_id FROM result ORDER BY race_id, distance_id;
 ''', fetch=True)
@@ -299,7 +299,7 @@ for d in ds:
         type = 2
         distance = float(distance_data['distance'])  # km単位
         dulation = None
-    msql.query('INSERT INTO race_types (competition_id, show_name, type, distance, dulation) VALUES (%s, %s, %s, %s, %s);',
+    msql.query('INSERT INTO races (competition_id, show_name, type, distance, dulation) VALUES (%s, %s, %s, %s, %s);',
                (competition_id, show_name, type, distance, dulation))
 # results
 print("migrating results")
@@ -329,8 +329,8 @@ for ofst in range(0, n, limit):
         distance_name = psql.query(query_get_distance_name, fetch=True)[
             0]['distance_name']
         race_type_id = msql.query(
-            'SELECT id FROM race_types WHERE competition_id = %s and show_name = %s;', (competition_id, distance_name), fetch=True)[0]['id']
-        msql.query('''INSERT INTO results (date, member_id, competition_id, race_type_id, record, comment) VALUES (%s,%s,%s,%s,%s,%s);''',
+            'SELECT id FROM races WHERE competition_id = %s and show_name = %s;', (competition_id, distance_name), fetch=True)[0]['id']
+        msql.query('''INSERT INTO results (date, member_id, competition_id, race_id, record, comment) VALUES (%s,%s,%s,%s,%s,%s);''',
                    (date, d['member_id'], competition_id, race_type_id, int(d['result'].total_seconds()), d['comment']))
 
 msql.commit()
