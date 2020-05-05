@@ -19,6 +19,7 @@ sudo -H python3 -m pip install --upgrade psycopg2
 sudo -H python3 -m pip install --upgrade mysql-connector-python
 sudo -H python3 -m pip install --upgrade mecab-python3
 sudo -H python3 -m pip install --upgrade flask flask-sqlalchemy flask-wtf flask-bootstrap flask-login flask-bcrypt
+sudo -H python3 -m pip install --upgrade geoalchemy
 
 
 # configure postgresql (enable password login for psql command)

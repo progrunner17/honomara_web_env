@@ -55,33 +55,47 @@ CREATE TABLE IF NOT EXISTS  training_participant (
   training_id INT NOT NULL  -- FOREIGN KEY REFERENCES training(id)
 );
 
-CREATE TABLE IF NOT EXISTS competitions (
+CREATE TABLE IF NOT EXISTS competition (
   `id`        INT         PRIMARY KEY AUTO_INCREMENT,
   `name`      VARCHAR(60) NOT NULL,
-  `name_kana` VARCHAR(60),
+  `name_kana` VARCHAR(60),  --sort用
   `show_name` VARCHAR(60),
-  `place`     VARCHAR(30),
+  `location`  GEOMETRY,
   `url`       TEXT,
   `comment`   TEXT
 );
 
-CREATE TABLE IF NOT EXISTS races (
-  `id`                      INT         PRIMARY KEY AUTO_INCREMENT,
-  `competition_id`          INT         NOT NULL, -- FOREIGN KEY REFERENCES competitions(id)
-  `show_name`               VARCHAR(30),
-  `type`                    INT,  -- road: 0, trail: 1, track: 2, time: 3, others: -1
-  `distance`                FLOAT   DEFAULT 0,
-  `dulation`                FLOAT   DEFAULT 0,
-  `cumulative_elevation`    FLOAT   DEFAULT 0,
+
+CREATE TABLE IF NOT EXISTS cource_base (
+  `id`        INT                 PRIMARY KEY AUTO_INCREMENT,
+  `type`      VARCHAR(30)         NOT NULL, -- road, trail, track, time
+  `distance`  INT,
+  `dulation`  INT,
+  `comment`   TEXT
+);
+
+CREATE TABLE IF NOT EXISTS course (
+  `id`                      INT           PRIMARY KEY AUTO_INCREMENT,
+  `competition_id`          INT           NOT NULL, -- FOREIGN KEY REFERENCES competition(id)
+  `cource_base_id`          INT           NOT NULL, -- FOREIGN KEY REFERENCES cource_type(id)
+  `name`                    VARCHAR(30),
+  `cumulative_elevation`    INT,
   `comment`                 TEXT
 );
 
-CREATE TABLE IF NOT EXISTS results (
-  `id`                    INT         PRIMARY KEY AUTO_INCREMENT,
-  `date`                  DATE        NOT NULL,
+CREATE TABLE IF NOT EXISTS race (
+  `id`                      INT         PRIMARY KEY AUTO_INCREMENT,
+  `cource_id`               INT         NOT NULL,    -- FOREIGN KEY REFERENCES cource(id)
+  `date`                    INT,
+  `comment`                 INT
+);
+
+
+
+CREATE TABLE IF NOT EXISTS result (
   `member_id`             INT         NOT NULL,  -- FOREIGN KEY REFERENCES member(id)
-  `competition_id`        INT         NOT NULL,  -- FOREIGN KEY REFERENCES competition_date(id)
-  `race_id`               INT         NOT NULL,  -- FOREIGN KEY REFERENCES race_types(id)
-  `record`                INT         NOT NULL    DEFAULT 0,
+  `race_id`               INT         NOT NULL,  -- FOREIGN KEY REFERENCES race(id)
+  `time`                  INT,
+  `distance`              INT,
   `comment`               TEXT
 );
