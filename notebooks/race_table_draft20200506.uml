@@ -1,0 +1,60 @@
+@startuml
+entity "大会" as e01{
+  + 大会ID[PK]
+  --
+    場所、URLなど…
+}
+
+
+entity "種目分類" as e02{
+  + 種目分類ID[PK]
+  --
+  # 種別
+  # 距離or時間
+}
+
+entity "種目" as e03{
+  + 種目ID[PK]
+  --
+  # 大会ID[FK]
+  # 種目分類ID[FK]
+    獲得標高、累積標高、コース?
+}
+
+entity "レース" as e04{
+  + レースID[PK]
+  --
+  # 種目ID[FK]
+  # 日程
+    制限時間
+}
+
+entity "記録" as e05{
+  + メンバーID[PK]
+  + レースID[PK]
+  --
+  # 記録
+    備考
+}
+
+entity "メンバー" as e06{
+  + メンバーID[PK]
+  --
+}
+
+entity "駅伝" as e07 {
+  + ID
+  --
+  # 駅伝のレースID
+  # 区間
+  # 記録
+}
+
+
+e01 ||.ri.o{ e03
+e02 ||.le.o{ e03
+e03 ||.do.o{ e04
+e04 ||.do.o{ e05
+e05 }o.le.|| e06
+
+@enduml
