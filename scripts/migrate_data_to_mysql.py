@@ -263,10 +263,10 @@ ds.sort()
 for d in ds:
     msql.query(
         'INSERT INTO competition (name, show_name) VALUES (%s, %s);', (d, d))
-# cource_base
-print("migrating cource_base")
+# course_base
+print("migrating course_base")
 ds = psql.query('''
-SELECT distance_id AS cource_base_id, distance AS distance FROM distance ORDER BY ranking;
+SELECT distance_id AS course_base_id, distance AS distance, distance_name AS show_name FROM distance ORDER BY ranking;
 ''', fetch=True)
 
 time = list(filter(lambda d: search('時間', d['show_name']), ds))
@@ -275,27 +275,26 @@ track = list(filter(lambda d: search('メートル', d['show_name']), ds))
 
 
 for t in time:
-    t['duration'] = int(t['show_name'].replace('時間走', '')) * 3600 * 1000 # ms単位
-    t['distance'] = None
-    t['type'] = 'time'
-    msql.query('''INSERT INTO cource_base (id, type, duration) VALUES (%s,%s,%s);''',
-               (t['cource_base_id'], t['type'], t['duration']))
+    t['duration'] = int(t['show_name'].replace('時間走', '')) * 3600  # s単位
+    t['type'] = '時間走'
+    msql.query('''INSERT INTO course_base (id, type, duration) VALUES (%s,%s,%s);''',
+               (t['course_base_id'], t['type'], t['duration']))
 
 
 for t in track:
-    t['type'] = 'track'
-    t['distance'] = int(t['distance'])  # km単位
-    msql.query('''INSERT INTO cource_base (id, type, distance) VALUES (%s,%s,%s);''',
-               (t['cource_base_id'], t['type'], t['distance']))
+    t['type'] = 'トラック'
+    t['distance'] = int(t['distance'] * 1000)  # m単位
+    msql.query('''INSERT INTO course_base (id, type, distance) VALUES (%s,%s,%s);''',
+               (t['course_base_id'], t['type'], t['distance']))
 
 
 for t in road:
-    t['distance'] = int(t['distance'])
-    t['type'] = 'road'
-    msql.query('''INSERT INTO cource_base (id, type, distance) VALUES (%s,%s,%s);''',
-               (t['cource_base_id'], t['type'], t['distance']))
-# cource
-print("migrating cource")
+    t['distance'] = int(t['distance'] * 1000)  # m単位
+    t['type'] = 'ロード'
+    msql.query('''INSERT INTO course_base (id, type, distance) VALUES (%s,%s,%s);''',
+               (t['course_base_id'], t['type'], t['distance']))
+# course
+print("migrating course")
 ds = psql.query('''
 SELECT distance_id, race_id FROM result ORDER BY race_id, distance_id;
 ''', fetch=True)
@@ -313,42 +312,44 @@ for d in ds:
         format(d['race_id'])
     race_name = psql.query(query_get_race_name, fetch=True)[0]['race_name']
     race_name = table.get(race_name, race_name)
-    if [race_name, d['distance_id']] in race_name_distance_id:
+    if [race_name, d['distance_id']] in race_name_distance_id:  # race_name = competition.name
         continue
     race_name_distance_id.append([race_name, d['distance_id']])
     competition_id = msql.query(
         'SELECT id FROM competition WHERE name=%s;', (race_name,), fetch=True)[0]['id']
-    msql.query('INSERT INTO cource (competition_id, name, cource_base_id) VALUES (%s, %s, %s);',
-               (competition_id, race_name, d['distance_id']))
+    msql.query('INSERT INTO course (competition_id, name, course_base_id) VALUES (%s, %s, %s);',
+               (competition_id, show_name, d['distance_id']))
 # race
 print("migrating race")
 ds = psql.query('''
-SELECT distance_id AS cource_base_id, race_id FROM result ORDER BY race_id, distance_id;
+SELECT distance_id AS course_base_id, race_id FROM result ORDER BY race_id, distance_id;
 ''', fetch=True)
-last_d = {'cource_base_id': 0, 'race_id': 0}
+last_d = {'course_base_id': 0, 'race_id': 0}
 for d in ds:
-    if [d['cource_base_id'], d['race_id']] == [last_d['cource_base_id'], last_d['race_id']]:
+    if [d['course_base_id'], d['race_id']] == [last_d['course_base_id'], last_d['race_id']]:
         continue
+    last_d = d
     query_get_date_and_race_name = 'SELECT date, race_name FROM race WHERE race_id={};'.\
         format(d['race_id'])
-    date_and_race_name = psql.query(query_get_race_name, fetch=True)[0]
+    date_and_race_name = psql.query(
+        query_get_date_and_race_name, fetch=True)[0]
     date = date_and_race_name['date']
     race_name = date_and_race_name['race_name']
     race_name = table.get(race_name, race_name)
     competition_id = msql.query(
-        'SELECT id FROM competitions WHERE name=%s;', (race_name,), fetch=True)[0]['id']
-    cource_id = msql.query('SELECT id FROM cource WHERE competition_id=%s and cource_base_id=%s;'.\
-             format(competition_id, d['cource_base_id']))[0]['id']
-    msql.query('INSERT INTO race (cource_id, date) VALUES (%s, %s);',
-               (cource_id, date))
-# results
-print("migrating results")
+        'SELECT id FROM competition WHERE name=%s;', (race_name,), fetch=True)[0]['id']
+    course_id = msql.query('SELECT id FROM course WHERE competition_id=%s and course_base_id=%s;',
+                           (competition_id, d['course_base_id']), fetch=True)[0]['id']
+    msql.query('INSERT INTO race (course_id, date) VALUES (%s, %s);',
+               (course_id, date))
+# result
+print("migrating result")
 n = psql.query('SELECT count(*) FROM result; ', fetch=True)[0]['count']
 ofst = 0
 limit = 100
 for ofst in range(0, n, limit):
     ds = psql.query('''
-    SELECT person_id AS member_id, race_id, distance_id AS cource_base_id, time as result, display_time, comment
+    SELECT person_id AS member_id, race_id, distance_id AS course_base_id, time AS result, display_time, comment
     FROM result ORDER BY race_id OFFSET {} LIMIT {};'''.format(ofst, limit), fetch=True)
     for d in ds:
         if not d['result']:  # 結果がない場合は飛ばす
@@ -364,19 +365,21 @@ for ofst in range(0, n, limit):
         race_name = table.get(race_name, race_name)
         competition_id = msql.query(
             'SELECT id FROM competition WHERE name=%s;', (race_name,), fetch=True)[0]['id']
-        cource_id = msql.query('SELECT id FROM cource WHERE competition_id=%s and cource_base_id=%s;'.\
-                format(competition_id, d['cource_base_id']))[0]['id']
-        race_id = msql.query('SELECT id FROM race WHERE cource_id=%s and date=%s;'.\
-                format(cource_id, date))
-        type = msql.query('SELECT type FROM cource_base WHERE id=%s;'.\
-                format(d['cource_base_id'],))
-        if type == "track" or type == "road":
-            time = int(d['result'].total_seconds()) * 1000 # ms単位
-            msql.query('''INSERT INTO results (member_id, race_id, time, comment) VALUES (%s,%s,%s,%s,%s);''',
-                   (d['member_id'], competition_id, race_id, time, d['comment']))
+        course_id = msql.query('SELECT id FROM course WHERE competition_id=%s and course_base_id=%s;',
+                               (competition_id, d['course_base_id']), fetch=True)[0]['id']
+        race_id = msql.query('SELECT id FROM race WHERE course_id=%s and date=%s;',
+                             (course_id, date), fetch=True)[0]['id']
+        type = msql.query('SELECT type FROM course_base WHERE id=%s;',
+                          (d['course_base_id'],), fetch=True)[0]['type']
+        if type == "トラック" or type == "ロード":
+            # ms単位、トラック競技の正確な結果はコメントに記録されている->コメントから値を抽出することを検討したい
+            time = int(d['result'].total_seconds()) * 1000
+            msql.query('''INSERT INTO result (member_id, race_id, time, comment) VALUES (%s,%s,%s,%s);''',
+                       (d['member_id'], race_id, time, d['comment']))
         else:
+            # 正確な結果はコメントに記録されている->コメントから値を抽出することを検討したい
             distance = int(d['result'].total_seconds())
-            msql.query('''INSERT INTO results (member_id, race_id, distance, comment) VALUES (%s,%s,%s,%s,%s);''',
-                   (d['member_id'], competition_id, race_id, distance, d['comment']))
+            msql.query('''INSERT INTO result (member_id, race_id, distance, comment) VALUES (%s,%s,%s,%s);''',
+                       (d['member_id'], race_id, distance, d['comment']))
 
 msql.commit()

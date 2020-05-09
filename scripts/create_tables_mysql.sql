@@ -58,35 +58,35 @@ CREATE TABLE IF NOT EXISTS  training_participant (
 CREATE TABLE IF NOT EXISTS competition (
   `id`        INT         PRIMARY KEY AUTO_INCREMENT,
   `name`      VARCHAR(60) NOT NULL,
-  `name_kana` VARCHAR(60),  --sort用
+  `name_kana` VARCHAR(60), -- sort用
   `show_name` VARCHAR(60),
-  `location`  GEOMETRY,
+  `location`  VARCHAR(30),
   `url`       TEXT,
   `comment`   TEXT
 );
 
 
-CREATE TABLE IF NOT EXISTS cource_base (
+CREATE TABLE IF NOT EXISTS course_base (
   `id`        INT                 PRIMARY KEY AUTO_INCREMENT,
-  `type`      VARCHAR(30)         NOT NULL, -- road, trail, track, time
-  `distance`  INT,
-  `dulation`  INT,
+  `type`      VARCHAR(30)         NOT NULL, -- ロード、トレイル、トラック、時間走
+  `distance`  INT,  -- m
+  `duration`  INT,  -- s
   `comment`   TEXT
 );
 
 CREATE TABLE IF NOT EXISTS course (
   `id`                      INT           PRIMARY KEY AUTO_INCREMENT,
   `competition_id`          INT           NOT NULL, -- FOREIGN KEY REFERENCES competition(id)
-  `cource_base_id`          INT           NOT NULL, -- FOREIGN KEY REFERENCES cource_type(id)
-  `name`                    VARCHAR(30),
-  `cumulative_elevation`    INT,
+  `course_base_id`          INT           NOT NULL, -- FOREIGN KEY REFERENCES cource(id)
+  `name`                    VARCHAR(60),
+  `cumulative_elevation`    INT,  -- m
   `comment`                 TEXT
 );
 
 CREATE TABLE IF NOT EXISTS race (
   `id`                      INT         PRIMARY KEY AUTO_INCREMENT,
-  `cource_id`               INT         NOT NULL,    -- FOREIGN KEY REFERENCES cource(id)
-  `date`                    INT,
+  `course_id`               INT         NOT NULL,    -- FOREIGN KEY REFERENCES cource(id)
+  `date`                    DATE        NOT NULL,
   `comment`                 INT
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS race (
 CREATE TABLE IF NOT EXISTS result (
   `member_id`             INT         NOT NULL,  -- FOREIGN KEY REFERENCES member(id)
   `race_id`               INT         NOT NULL,  -- FOREIGN KEY REFERENCES race(id)
-  `time`                  INT,
-  `distance`              INT,
+  `time`                  INT,  -- ms
+  `distance`              INT,  -- m
   `comment`               TEXT
 );

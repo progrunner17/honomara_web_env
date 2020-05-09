@@ -3,8 +3,8 @@ ALTER TABLE after_participant    ADD CONSTRAINT FOREIGN KEY (after_id)          
 ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (member_id)             REFERENCES member(id);
 ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (training_id)           REFERENCES training(id);
 ALTER TABLE after                ADD CONSTRAINT FOREIGN KEY (restaurant_id)         REFERENCES restaurant(id);
-ALTER TABLE cource               ADD CONSTRAINT FOREIGN KEY (cource_base_id)        REFERENCES cource_base(id);
-ALTER TABLE cource               ADD CONSTRAINT FOREIGN KEY (competition_id)        REFERENCES competition(id);
-ALTER TABLE race                 ADD CONSTRAINT FOREIGN KEY (cource_id)             REFERENCES cource(id);
+ALTER TABLE course               ADD CONSTRAINT FOREIGN KEY (course_base_id)        REFERENCES course_base(id);
+ALTER TABLE course               ADD CONSTRAINT FOREIGN KEY (competition_id)        REFERENCES competition(id);
+ALTER TABLE race                 ADD CONSTRAINT FOREIGN KEY (course_id)             REFERENCES course(id);
 ALTER TABLE result               ADD CONSTRAINT FOREIGN KEY (race_id)               REFERENCES race(id);
 ALTER TABLE result               ADD CONSTRAINT FOREIGN KEY (member_id)             REFERENCES member(id);
