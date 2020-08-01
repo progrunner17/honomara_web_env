@@ -10,7 +10,7 @@ EOF
 
 cat /vagrant/scripts/create_tables_mysql.sql | MYSQL_PWD='honomara' mysql -u root honomara
 
-python3 /vagrant/scripts/migrate_data_to_mysql.py
+MECABRC=/etc/mecabrc python3 /vagrant/scripts/migrate_data_to_mysql.py
 
 cat /vagrant/scripts/add_foreign_key_const.sql | MYSQL_PWD='honomara' mysql -u root honomara
 
