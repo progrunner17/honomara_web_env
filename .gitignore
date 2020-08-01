@@ -1,3 +1,4 @@
 vagrant/.vagrant
 .vscode/
 .sudo_as_admin_successful
+*.bak

@@ -3,11 +3,11 @@ set -eu
 
 pushd $(dirname $0)
 
-if ! (type pip3 > /dev/null 2>&1); then
-./setup_pip3.sh
-fi
-sudo pip3 install jupyter 
-sudo pip3 install bash_kernel 
+sudo apt install -y python3 python3-pip
+
+sudo -H python3 -m pip install --upgrade pip
+sudo -H python3 -m pip install jupyter
+sudo -H python3 -m pip install bash_kernel
 sudo python3 -m bash_kernel.install
 
 HOME=/home/vagrant

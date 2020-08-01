@@ -203,12 +203,12 @@ except DuplicateColumn as err:
     print(err)
     psql = Postgres()
 
-r1 = msql.query('SELECT * FROM restaurant WHERE id = 1;',fetch=True)[0]
+r1 = msql.query('SELECT * FROM restaurant WHERE id = 1;', fetch=True)[0]
 for d in psql.query('SELECT * FROM after ORDER BY date;', fetch=True):
     r = None
     if d['restaurant'] not in ['', '?', '？']:
         r = msql.query('SELECT * FROM restaurant WHERE name = %s AND place = %s',
-                          (d['restaurant'], d['site']), fetch=True)[0]
+                       (d['restaurant'], d['site']), fetch=True)[0]
     if r is None:
         r = r1
     r_id = r['id']
