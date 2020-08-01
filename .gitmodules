@@ -1,0 +1,3 @@
+[submodule "app/honomara_members_site"]
+	path = app/honomara_members_site
+	url = git@github.com:progrunner17/honomara_members_site
