@@ -9,27 +9,33 @@ CREATE TABLE IF NOT EXISTS member (
   `kana`        VARCHAR(60)  , -- for index
   `year`        INT          NOT NULL,
   `sex`         INT          NOT NULL DEFAULT 0, -- 0=man, 1=woman
-  `visible`     BOOL         NOT NULL DEFAULT true
+  `visible`     BOOL         NOT NULL DEFAULT true,
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS training (
-  `id`      INT           PRIMARY KEY AUTO_INCREMENT,
-  `date`    DATE          NOT NULL,
-  `place`   VARCHAR(30)   NOT NULL,
-  `weather` VARCHAR(30),
-  `title`   VARCHAR(100)  NOT NULL,
-  `comment` TEXT,
+  `id`          INT           PRIMARY KEY AUTO_INCREMENT,
+  `date`        DATE          NOT NULL,
+  `place`       VARCHAR(30)   NOT NULL,
+  `weather`     VARCHAR(30),
+  `title`       VARCHAR(100)  NOT NULL,
+  `comment`     TEXT,
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX USING BTREE (date),
   FULLTEXT (title) WITH PARSER ngram,
   FULLTEXT (comment) WITH PARSER ngram
 );
 
 CREATE TABLE IF NOT EXISTS restaurant (
-  id               INT PRIMARY KEY AUTO_INCREMENT,
-  name  VARCHAR(30) NOT NULL, -- TODO: change column name to `name`
-  place            VARCHAR(30),
-  score FLOAT NOT NULL DEFAULT 0,
-  comment TEXT
+  id              INT PRIMARY KEY AUTO_INCREMENT,
+  name            VARCHAR(30) NOT NULL, -- TODO: change column name to `name`
+  place           VARCHAR(30),
+  score           FLOAT NOT NULL DEFAULT 0,
+  comment         TEXT,
+  `created_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS after (
@@ -39,20 +45,26 @@ CREATE TABLE IF NOT EXISTS after (
   `restaurant_id` INT NOT NULL, -- FOREIGN KEY (`restaurant_id`) REFERENCES restaurant(`id`),
   `title`         VARCHAR(100) NOT NULL,
   `comment`       TEXT,
+  `created_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX USING BTREE(`date`),
   FULLTEXT (title) WITH PARSER ngram,
   FULLTEXT (comment) WITH PARSER ngram
 );
 
 CREATE TABLE IF NOT EXISTS  after_participant (
-  member_id   INT NOT NULL, -- FOREIGN KEY REFERENCES member(id)
-  after_id    INT NOT NULL  -- FOREIGN KEY REFERENCES after(id)
+  `member_id`   INT NOT NULL, -- FOREIGN KEY REFERENCES member(id)
+  `after_id`    INT NOT NULL, -- FOREIGN KEY REFERENCES after(id)
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE IF NOT EXISTS  training_participant (
-  member_id   INT NOT NULL, -- FOREIGN KEY REFERENCES member(id)
-  training_id INT NOT NULL  -- FOREIGN KEY REFERENCES training(id)
+  `member_id`   INT NOT NULL, -- FOREIGN KEY REFERENCES member(id)
+  `training_id` INT NOT NULL, -- FOREIGN KEY REFERENCES training(id)
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -60,15 +72,19 @@ CREATE TABLE IF NOT EXISTS race_base (
   `race_name`      VARCHAR(60) PRIMARY KEY,
   `race_name_kana` VARCHAR(60),
   `prefecture`     VARCHAR(30),
-  `comment`        TEXT
+  `comment`        TEXT,
+  `created_at`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE IF NOT EXISTS race (
-  `id`        INT PRIMARY KEY AUTO_INCREMENT,
-  `race_name` VARCHAR(60) NOT NULL,
-  `date`      DATE NOT NULL,
-  `comment`   TEXT
+  `id`          INT PRIMARY KEY AUTO_INCREMENT,
+  `race_name`   VARCHAR(60) NOT NULL,
+  `date`        DATE NOT NULL,
+  `comment`     TEXT,
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -79,7 +95,9 @@ CREATE TABLE IF NOT EXISTS race_type (
   `ranking`    INT NOT NULL DEFAULT 100,
   `duration`   FLOAT,
   `distance`   FLOAT,
-  `comment`    TEXT
+  `comment`    TEXT,
+  `created_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
@@ -88,6 +106,8 @@ CREATE TABLE IF NOT EXISTS result (
   `race_type_id`  INT NOT NULL, -- FOREIGN KEY REFERENCES race_type(id)
   `race_id`       INT NOT NULL, -- FOREIGN KEY REFERENCES race(id)
   `result`        INT NOT NULL,
-  `comment`       TEXT
+  `comment`       TEXT,
+  `created_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 );
 
