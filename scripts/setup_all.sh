@@ -2,7 +2,7 @@
 set -eu
 
 sudo apt-add-repository -y ppa:ondrej/php
-#sudo apt update
+sudo apt update
 echo "mysql-server-5.7 mysql-server/root_password password honomara"       |sudo debconf-set-selections -
 echo "mysql-server-5.7 mysql-server/root_password_again password honomara" |sudo debconf-set-selections -
 
