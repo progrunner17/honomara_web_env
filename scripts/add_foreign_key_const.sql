@@ -1,7 +1,10 @@
-ALTER TABLE after_participant    ADD CONSTRAINT FOREIGN KEY (member_id)       REFERENCES member(id);
-ALTER TABLE after_participant    ADD CONSTRAINT FOREIGN KEY (after_id)        REFERENCES after(id);
-ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (member_id)       REFERENCES member(id);
-ALTER TABLE training_participant ADD CONSTRAINT FOREIGN KEY (training_id)     REFERENCES training(id);
-ALTER TABLE result               ADD CONSTRAINT FOREIGN KEY (race_type_id)    REFERENCES race_type(id);
-ALTER TABLE result               ADD CONSTRAINT FOREIGN KEY (race_id)         REFERENCES race(id);
-ALTER TABLE after                ADD CONSTRAINT FOREIGN KEY (restaurant_id)   REFERENCES restaurant(id);
+ALTER TABLE after                ADD CONSTRAINT after2restaurant              FOREIGN KEY (restaurant_id)   REFERENCES restaurant(id);
+ALTER TABLE after_participant    ADD CONSTRAINT after_participant2member      FOREIGN KEY (member_id)       REFERENCES member(id);
+ALTER TABLE after_participant    ADD CONSTRAINT after_participant2after       FOREIGN KEY (after_id)        REFERENCES after(id);
+ALTER TABLE training_participant ADD CONSTRAINT training_participant2member   FOREIGN KEY (member_id)       REFERENCES member(id);
+ALTER TABLE training_participant ADD CONSTRAINT training_participant2training FOREIGN KEY (training_id)     REFERENCES training(id);
+ALTER TABLE course               ADD CONSTRAINT course2copmetition            FOREIGN KEY (competition_id)  REFERENCES competition(id);
+ALTER TABLE race                 ADD CONSTRAINT race2course                   FOREIGN KEY (course_id)       REFERENCES course(id);
+ALTER TABLE result               ADD CONSTRAINT result2race                   FOREIGN KEY (race_id)         REFERENCES race(id);
+ALTER TABLE race_participant     ADD CONSTRAINT race_participant2result       FOREIGN KEY (result_id)       REFERENCES result(id);
+ALTER TABLE race_participant     ADD CONSTRAINT race_participant2member       FOREIGN KEY (member_id)       REFERENCES member(id);

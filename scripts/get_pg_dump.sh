@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 set -eux
 
-source ./env.sh # create env.sh and set ENV_PGPASSWORD
+source 'env.sh'
 mkdir -p ./dump
 file="./dump/dump_data_postgres_$(date +%s).sql"
 ssh -C honomara sh > $file <<-EOF
